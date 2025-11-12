@@ -21,8 +21,10 @@ public class SupplierService {
     public BaseRespone getAll() {
         BaseRespone resp = new BaseRespone();
         try {
-            List<SupplierEntity> list = supplierRepository.findAll();
-            List<SupplierResponse> data = list.stream().map(this::toResp).collect(Collectors.toList());
+        List<SupplierEntity> list = supplierRepository.findAll().stream()
+            .filter(s -> Boolean.TRUE.equals(s.getStatus()))
+            .collect(Collectors.toList());
+        List<SupplierResponse> data = list.stream().map(this::toResp).collect(Collectors.toList());
             resp.setStatusCode(HttpStatus.OK.value());
             resp.setMessage("Success");
             resp.setData(data);
@@ -38,9 +40,9 @@ public class SupplierService {
         BaseRespone resp = new BaseRespone();
         try {
             var opt = supplierRepository.findBySupplierCode(supplierCode);
-            if (opt.isEmpty()) {
+            if (opt.isEmpty() || !Boolean.TRUE.equals(opt.get().getStatus())) {
                 resp.setStatusCode(HttpStatus.NOT_FOUND.value());
-                resp.setMessage("Supplier not found");
+                resp.setMessage("Supplier not found or inactive");
                 resp.setData(null);
                 return resp;
             }

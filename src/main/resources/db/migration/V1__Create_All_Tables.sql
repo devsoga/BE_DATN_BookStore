@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS `promotion` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `promotion_code` VARCHAR(50) UNIQUE NOT NULL,
     `promotion_name` VARCHAR(255),
+    `description` VARCHAR(255),
     `value` DECIMAL(10,2),
     `promotion_type_code` VARCHAR(50),
     `start_date` DATETIME,

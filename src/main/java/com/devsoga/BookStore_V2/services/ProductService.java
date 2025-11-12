@@ -38,6 +38,9 @@ public class ProductService {
     @org.springframework.beans.factory.annotation.Autowired
     private com.devsoga.BookStore_V2.repositories.InventoryRepository inventoryRepository;
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.devsoga.BookStore_V2.services.InventoryService inventoryService;
+
     @Value("${app.base-url:}")
     private String appBaseUrl; // optional, e.g. http://localhost:8080
 
@@ -225,7 +228,8 @@ public class ProductService {
             if (req.getAuthor() != null) exist.setAuthor(req.getAuthor());
             if (req.getPublisher() != null) exist.setPublisher(req.getPublisher());
             if (req.getStatus() != null) exist.setStatus(req.getStatus());
-            if (req.getPromotionCode() != null) exist.setPromotionCode(req.getPromotionCode());
+            // allow explicit null to clear promotionCode in DB when updating
+            exist.setPromotionCode(req.getPromotionCode());
 
             if (req.getCategoryCode() != null) {
                 var cat = productCategoryRepository.findByCategoryCode(req.getCategoryCode()).orElse(null);
@@ -309,7 +313,16 @@ public class ProductService {
             if (promotion != null && isPromotionValid(promotion)) {
                 r.setPromotionCode(promotion.getPromotionCode());
                 r.setPromotionName(promotion.getPromotionName());
-                r.setDiscountValue(promotion.getValue());
+                // set promotion object on response with selected fields only
+                com.devsoga.BookStore_V2.dtos.responses.PromotionResponse pr = new com.devsoga.BookStore_V2.dtos.responses.PromotionResponse();
+                pr.setPromotionCode(promotion.getPromotionCode());
+                pr.setPromotionName(promotion.getPromotionName());
+                pr.setValue(promotion.getValue());
+                if (promotion.getPromotionTypeEntity() != null) {
+                    pr.setPromotionTypeCode(promotion.getPromotionTypeEntity().getPromotionTypeCode());
+                    pr.setPromotionTypeName(promotion.getPromotionTypeEntity().getPromotionTypeName());
+                }
+                r.setPromotion(pr);
                 
                 // Calculate discounted price based on promotion type
                 if (promotion.getPromotionTypeEntity() != null) {
@@ -338,11 +351,42 @@ public class ProductService {
             // in case of lazy loading issues, ignore and leave categoryCode null
         }
         // fetch total active inventory quantity for this product
+        // Prefer using InventoryService API to fetch inventory entries for this product and derive quantity
         try {
-            Integer total = inventoryRepository.findTotalQuantityByProductCode(p.getProductCode());
-            r.setStockQuantity(total == null ? 0 : total);
+            com.devsoga.BookStore_V2.payload.respone.BaseRespone invResp = inventoryService.getByProductCode(p.getProductCode());
+            if (invResp != null && invResp.getStatusCode() == org.springframework.http.HttpStatus.OK.value() && invResp.getData() != null) {
+                try {
+                    java.util.List<?> list = (java.util.List<?>) invResp.getData();
+                    int total = 0;
+                    for (Object obj : list) {
+                        if (obj instanceof com.devsoga.BookStore_V2.dtos.responses.InventoryResponse) {
+                            com.devsoga.BookStore_V2.dtos.responses.InventoryResponse ir = (com.devsoga.BookStore_V2.dtos.responses.InventoryResponse) obj;
+                            Integer q = ir.getQuantityOnHand();
+                            total += (q == null ? 0 : q);
+                        } else if (obj instanceof java.util.Map) {
+                            // When Jackson deserializes via generic Object, map keys may be used
+                            java.util.Map<?,?> map = (java.util.Map<?,?>) obj;
+                            Object qObj = map.get("quantityOnHand");
+                            try {
+                                total += qObj == null ? 0 : Integer.parseInt(qObj.toString());
+                            } catch (Exception ex) {}
+                        }
+                    }
+                    r.setStockQuantity(total);
+                } catch (Exception ex) {
+                    r.setStockQuantity(0);
+                }
+            } else {
+                r.setStockQuantity(0);
+            }
         } catch (Exception ignored) {
-            r.setStockQuantity(0);
+            // fallback to repository query
+            try {
+                Integer total = inventoryRepository.findTotalQuantityByProductCode(p.getProductCode());
+                r.setStockQuantity(total == null ? 0 : total);
+            } catch (Exception e) {
+                r.setStockQuantity(0);
+            }
         }
         return r;
     }

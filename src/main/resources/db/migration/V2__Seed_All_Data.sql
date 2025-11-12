@@ -55,15 +55,17 @@ VALUES ('NCC01', 'NXB Tổng Hợp', '123 Đường Sách, HN', '0912345678', 'n
 -- =========================
 -- Promotion types: percentage, fixed amount, free shipping
 INSERT INTO promotion_type (promotion_type_code, promotion_type_name, description) VALUES
-    ('PT_PERCENT', 'Percent', 'Giảm theo phần trăm'),
-    ('PT_FIXED', 'Fixed', 'Giảm theo số tiền cố định'),
-    ('PT_FREE_SHIP', 'FreeShip', 'Miễn phí vận chuyển');
+    ('PT_01', 'Percent','percentage'),
+    ('PT_02', 'Amount','fixed amount');
 
 -- Sample promotions
-INSERT INTO promotion (promotion_code, promotion_name, value, promotion_type_code, status) VALUES
-    ('VIP5', 'Silver Customer', 0.05, 'PT_PERCENT', 1),
-    ('VIP7', 'Gold Customer', 0.07, 'PT_PERCENT', 1),
-    ('VIP10', 'Diamond Customer', 0.10, 'PT_PERCENT', 1);
+INSERT INTO promotion (promotion_code, promotion_name, description, value, promotion_type_code, status) VALUES
+    ('VIP5', 'Silver Customer', 'Giảm 5% cho khách hàng Silver', 0.05, 'PT_01', 1),
+    ('VIP7', 'Gold Customer', 'Giảm 7% cho khách hàng Gold', 0.07, 'PT_01', 1),
+    ('VIP10', 'Diamond Customer', 'Giảm 10% cho khách hàng Diamond', 0.10, 'PT_01', 1),
+    ('FA200', 'Happy New Year', 'Giảm 200.000đ', 200000, 'PT_02', 1),
+    ('FA20', 'Noel', 'Giảm 20% cho đơn hàng trong dịp Noel', 0.20, 'PT_01', 1);
+
 
 -- =========================
 -- PRODUCT CATEGORY (20 CATEGORIES)

@@ -2,6 +2,8 @@ package com.devsoga.BookStore_V2.dtos.responses;
 
 import java.math.BigDecimal;
 
+import com.devsoga.BookStore_V2.dtos.responses.PromotionResponse;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +21,7 @@ public class ProductRespone {
     private BigDecimal importPrice;
     private String promotionCode;
     private String promotionName;
-    private BigDecimal discountValue;
+    private PromotionResponse promotion;
     private String categoryCode;
     private String categoryName;
     private Integer stockQuantity;
