@@ -24,4 +24,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
 
     // Find products by category type
     java.util.List<ProductEntity> findByProductCategoryEntity_CategoryType(String categoryType);
+
+    // Batch find by product codes
+    java.util.List<ProductEntity> findByProductCodeIn(java.util.List<String> productCodes);
 }

@@ -548,7 +548,10 @@ public class PurchaseOrderService {
         r.setTotalAmount(e.getTotalAmount());
         r.setDescription(e.getDescription());
     if (e.getEmployeeEntity() != null) r.setEmployeeCode(e.getEmployeeEntity().getEmployeeCode());
-    if (e.getSupplierEntity() != null) r.setSupplierName(e.getSupplierEntity().getSupplierName());
+    if (e.getSupplierEntity() != null) {
+        r.setSupplierName(e.getSupplierEntity().getSupplierName());
+        r.setSupplierCode(e.getSupplierEntity().getSupplierCode());
+    }
     
         if (e.getImportInvoiceDetailList() != null) {
             List<PurchaseOrderDetailResponse> details = e.getImportInvoiceDetailList().stream().map(d -> {
@@ -560,9 +563,10 @@ public class PurchaseOrderService {
                 dr.setTotalAmount(d.getTotalAmount());
                 dr.setQuantitySold(d.getQuantitySold());
                 dr.setQuantityCancel(d.getCancelledQuantity());
-                // Only include product information when requested (e.g., querying by product code)
-                if (includeProductDetails && d.getProductEntity() != null) {
+                // Populate basic product identifiers when product entity exists
+                if (d.getProductEntity() != null) {
                     dr.setProductCode(d.getProductEntity().getProductCode());
+                    dr.setProductName(d.getProductEntity().getProductName());
                 }
                 // set created date if available
                 try {
@@ -580,6 +584,8 @@ public class PurchaseOrderService {
         } catch (Exception ex) {
             // ignore
         }
+        // include reason if present (e.g., when order is rejected)
+        if (e.getReason() != null) r.setReason(e.getReason());
         return r;
     }
 
@@ -594,7 +600,10 @@ public class PurchaseOrderService {
         r.setTotalAmount(e.getTotalAmount());
         r.setDescription(e.getDescription());
     if (e.getEmployeeEntity() != null) r.setEmployeeCode(e.getEmployeeEntity().getEmployeeCode());
-    if (e.getSupplierEntity() != null) r.setSupplierName(e.getSupplierEntity().getSupplierName());
+    if (e.getSupplierEntity() != null) {
+        r.setSupplierName(e.getSupplierEntity().getSupplierName());
+        r.setSupplierCode(e.getSupplierEntity().getSupplierCode());
+    }
     
         if (e.getImportInvoiceDetailList() != null) {
             // Filter details to only include those with the matching productCode
@@ -610,6 +619,7 @@ public class PurchaseOrderService {
                     dr.setQuantitySold(d.getQuantitySold());
                     dr.setQuantityCancel(d.getCancelledQuantity());
                     dr.setProductCode(d.getProductEntity().getProductCode());
+                    dr.setProductName(d.getProductEntity().getProductName());
                     // set created date if available
                     try {
                         dr.setCreatedDate(d.getCreatedDate());
@@ -626,6 +636,8 @@ public class PurchaseOrderService {
         } catch (Exception ex) {
             // ignore
         }
+        // include reason if present (e.g., when order is rejected)
+        if (e.getReason() != null) r.setReason(e.getReason());
         return r;
     }
 }

@@ -17,6 +17,7 @@ public class PurchaseOrderResponse {
     private BigDecimal totalAmount;
     private String description;
     private String employeeCode;
+    private String supplierCode;
     private String supplierName;
     private List<PurchaseOrderDetailResponse> details;
     private LocalDateTime createdDate;

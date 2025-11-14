@@ -1,4 +1,4 @@
--- =========================
+﻿-- =========================
 -- ROLE
 -- =========================
 INSERT INTO role (role_code, role_name) VALUES
@@ -41,13 +41,23 @@ INSERT INTO customer_type (customer_type_code, customer_type_name, promotion_cod
 -- CUSTOMER
 -- =========================
 INSERT INTO customer (customer_code, customer_name, points, address, customer_type_code, account_code) VALUES
-    ('KH_USER', 'Đặng Khôi Nguyên', 100, '123 Đường ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
+    ('KH_USER', 'Äáº·ng KhÃ´i NguyÃªn', 100, '123 ÄÆ°á»ng ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
 
 -- =========================
 -- SUPPLIER
 -- =========================
-INSERT INTO supplier (supplier_code, supplier_name, address, phone_number, email)
-VALUES ('NCC01', 'NXB Tổng Hợp', '123 Đường Sách, HN', '0912345678', 'nxb@example.com');
+INSERT INTO supplier (supplier_code, supplier_name, address, phone_number, email) VALUES
+('NCC01', 'NXB Tổng Hợp Hà Nội', '123 Đường Sách, Hà Nội', '0912345678', 'tonghop.hn@example.com'),
+('NCC02', 'NXB Kim Đồng', '55 Quang Trung, Hà Nội', '0987654321', 'kimdong@example.com'),
+('NCC03', 'Công Ty Fahasa', '40 Nguyễn Huệ, TP.HCM', '0901122334', 'fahasa@example.com'),
+('NCC04', 'Công Ty Phân Phối Thiên Long', '27 Lê Duẩn, TP.HCM', '0911002200', 'thienlong@example.com'),
+('NCC05', 'Nhà Sách Phương Nam', '212 Nguyễn Trãi, TP.HCM', '0903344556', 'phuongnam@example.com'),
+('NCC06', 'Công Ty Văn Phòng Phẩm Hồng Hà', '15 Láng Hạ, Hà Nội', '0933221100', 'hongha@example.com'),
+('NCC07', 'Công Ty ADC Book', '98 Điện Biên Phủ, Hà Nội', '0919988776', 'adcbook@example.com'),
+('NCC08', 'Công Ty Đinh Tị Books', '24 Hoàng Cầu, Hà Nội', '0922233445', 'dinhti@example.com'),
+('NCC09', 'Công Ty AZ Việt Nam', '19 Pasteur, TP.HCM', '0905566778', 'azvietnam@example.com'),
+('NCC10', 'Công Ty Sách Alpha Books', '176 Thái Hà, Hà Nội', '0988112233', 'alphabooks@example.com');
+
 
 
 -- =========================
@@ -60,11 +70,11 @@ INSERT INTO promotion_type (promotion_type_code, promotion_type_name, descriptio
 
 -- Sample promotions
 INSERT INTO promotion (promotion_code, promotion_name, description, value, promotion_type_code, status) VALUES
-    ('VIP5', 'Silver Customer', 'Giảm 5% cho khách hàng Silver', 0.05, 'PT_01', 1),
-    ('VIP7', 'Gold Customer', 'Giảm 7% cho khách hàng Gold', 0.07, 'PT_01', 1),
-    ('VIP10', 'Diamond Customer', 'Giảm 10% cho khách hàng Diamond', 0.10, 'PT_01', 1),
-    ('FA200', 'Happy New Year', 'Giảm 200.000đ', 200000, 'PT_02', 1),
-    ('FA20', 'Noel', 'Giảm 20% cho đơn hàng trong dịp Noel', 0.20, 'PT_01', 1);
+    ('VIP5', 'Silver Customer', 'Giáº£m 5% cho khÃ¡ch hÃ ng Silver', 0.05, 'PT_01', 1),
+    ('VIP7', 'Gold Customer', 'Giáº£m 7% cho khÃ¡ch hÃ ng Gold', 0.07, 'PT_01', 1),
+    ('VIP10', 'Diamond Customer', 'Giáº£m 10% cho khÃ¡ch hÃ ng Diamond', 0.10, 'PT_01', 1),
+    ('FA200', 'Happy New Year', 'Giáº£m 200.000Ä‘', 200000, 'PT_02', 1),
+    ('FA20', 'Noel', 'Giáº£m 20% cho Ä‘Æ¡n hÃ ng trong dá»‹p Noel', 0.20, 'PT_01', 1);
 
 
 -- =========================
@@ -86,10 +96,10 @@ INSERT INTO product_category (category_code, category_name, category_type, descr
 	('LSP13', 'Calculator','calculator', 'Smart and reliable Casio calculators designed for students and professionals, offering precision, durability, and advanced functionality.'),
 	('LSP14', 'Note','note', 'Trendy and creative notebooks with unique designs, perfect for journaling, planning, and everyday note-taking.'),
 	('LSP15', 'Watch','watch', 'Stylish and durable Casio watches that combine innovation, modern design, and timeless craftsmanship.'),
-	('LSP16', 'Pen','pen', 'Premium pens that deliver smooth writing and elegant design — ideal for professionals, collectors, and creatives.'),
+	('LSP16', 'Pen','pen', 'Premium pens that deliver smooth writing and elegant design â€” ideal for professionals, collectors, and creatives.'),
 	('LSP17', 'Draw','draw', 'A collection of acrylic paints, markers, and brushes that inspire artists to explore color, texture, and creativity.'),
 	('LSP18', 'Studentbook','studentBook', 'Fun and colorful student notebooks featuring cute designs and high-quality paper for everyday school use.'),
-	('LSP19', 'CompaEke','compaEke', 'Practical geometry tools including compasses, rulers, and setsquares — perfect for students and technical drawing tasks.'),
+	('LSP19', 'CompaEke','compaEke', 'Practical geometry tools including compasses, rulers, and setsquares â€” perfect for students and technical drawing tasks.'),
 	('LSP20', 'PencilEraser','pencilEraser', 'A variety of pencils, erasers, and sharpeners designed for both students and artists, combining functionality with fun design.');
 
 
@@ -144,7 +154,7 @@ VALUES
 	 'Taylor Jenkins Reid','Atria Books', TRUE, 'LSP01', NULL),
 	
 	('SP0109','How My Neighbor Stole Christmas',
-	 'A grumpy man’s quiet holiday is ruined when his spirited neighbor drags him into a Christmas contest — and maybe, into love.',
+	 'A grumpy manâ€™s quiet holiday is ruined when his spirited neighbor drags him into a Christmas contest â€” and maybe, into love.',
 	 '/uploads/Romance/Romance9.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP01', NULL),
 	
@@ -167,46 +177,46 @@ VALUES
 	 'Mark Z. Danielewski','Pantheon', TRUE, 'LSP02', NULL),
 	
 	('SP0203','Frankenstein the Original 1818 Text',
-	 'Mary Shelley’s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
+	 'Mary Shelleyâ€™s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
 	 '/uploads/Horror/Horror3.jpg',
 	 'Mary Shelley','Penguin Classics', TRUE, 'LSP02', NULL),
 	
 	('SP0204','Home Before Dark',
-	 'A woman returns to her childhood home made famous by her father’s horror memoir, only to discover the terrifying truth behind it.',
+	 'A woman returns to her childhood home made famous by her fatherâ€™s horror memoir, only to discover the terrifying truth behind it.',
 	 '/uploads/Horror/Horror4.jpg',
 	 'Riley Sager','Dutton', TRUE, 'LSP02', NULL),
 	
 	('SP0205','Phantasma',
-	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister — without falling for the charming stranger guiding her.',
+	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister â€” without falling for the charming stranger guiding her.',
 	 '/uploads/Horror/Horror5.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0206','Never Flinch',
-	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killers’ paths collide in a deadly game of justice.',
+	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killersâ€™ paths collide in a deadly game of justice.',
 	 '/uploads/Horror/Horror6.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0207','It',
-	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears — and returns decades later for revenge.',
+	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears â€” and returns decades later for revenge.',
 	 '/uploads/Horror/Horror7.jpg',
 	 'Stephen King','Viking Press', TRUE, 'LSP02', NULL),
 	
 	('SP0208','We Used to Live Here',
-	 'A young couple’s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
+	 'A young coupleâ€™s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
 	 '/uploads/Horror/Horror8.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0209','Roald Dahl Book of Ghost Stories',
-	 'Fourteen eerie tales selected by Roald Dahl himself — classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
+	 'Fourteen eerie tales selected by Roald Dahl himself â€” classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
 	 '/uploads/Horror/Horror9.jpg',
 	 'Roald Dahl (Editor)','Farrar, Straus and Giroux', TRUE, 'LSP02', NULL),
 	
 	('SP0210','The Haunting of Hill House',
-	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jackson’s timeless tale of madness and the supernatural.',
+	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jacksonâ€™s timeless tale of madness and the supernatural.',
 	 '/uploads/Horror/Horror10.jpg',
 	 'Shirley Jackson','Viking Press', TRUE, 'LSP02', NULL),
 	
-	-- SP0211 → SP0220
+	-- SP0211 â†’ SP0220
 	('SP0211','Hazelthorn',
 	 'A chilling Southern horror set in 1950s Florida. A young boy sent to a reform school must survive cruelty and ghosts haunting its halls.',
 	 '/uploads/Horror/Horror11.jpg',
@@ -218,46 +228,46 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0213','King Sorrow',
-	 'Mary Shelley’s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
+	 'Mary Shelleyâ€™s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
 	 '/uploads/Horror/Horror13.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0214','The Haunting of Paynes Hollow',
-	 'A woman returns to her childhood home made famous by her father’s horror memoir, only to discover the terrifying truth behind it.',
+	 'A woman returns to her childhood home made famous by her fatherâ€™s horror memoir, only to discover the terrifying truth behind it.',
 	 '/uploads/Horror/Horror14.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0215','Bog Queen',
-	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister — without falling for the charming stranger guiding her.',
+	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister â€” without falling for the charming stranger guiding her.',
 	 '/uploads/Horror/Horror15.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0216','The Women of Wild Hill',
-	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killers’ paths collide in a deadly game of justice.',
+	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killersâ€™ paths collide in a deadly game of justice.',
 	 '/uploads/Horror/Horror16.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0217','The Graceview Patient',
-	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears — and returns decades later for revenge.',
+	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears â€” and returns decades later for revenge.',
 	 '/uploads/Horror/Horror17.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0218','The Hong Kong Widow',
-	 'A young couple’s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
+	 'A young coupleâ€™s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
 	 '/uploads/Horror/Horror18.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0219','Crafting for Sinners',
-	 'Fourteen eerie tales selected by Roald Dahl himself — classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
+	 'Fourteen eerie tales selected by Roald Dahl himself â€” classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
 	 '/uploads/Horror/Horror19.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0220','Toms Crossing',
-	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jackson’s timeless tale of madness and the supernatural.',
+	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jacksonâ€™s timeless tale of madness and the supernatural.',
 	 '/uploads/Horror/Horror20.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
-	-- SP0221 → SP0230
+	-- SP0221 â†’ SP0230
 	('SP0221','Colin Gets Promoted and Dooms the World',
 	 'A chilling Southern horror set in 1950s Florida. A young boy sent to a reform school must survive cruelty and ghosts haunting its halls.',
 	 '/uploads/Horror/Horror21.jpg',
@@ -269,46 +279,46 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0223','The Salvage',
-	 'Mary Shelley’s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
+	 'Mary Shelleyâ€™s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
 	 '/uploads/Horror/Horror23.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0224','How to Fake a Haunting',
-	 'A woman returns to her childhood home made famous by her father’s horror memoir, only to discover the terrifying truth behind it.',
+	 'A woman returns to her childhood home made famous by her fatherâ€™s horror memoir, only to discover the terrifying truth behind it.',
 	 '/uploads/Horror/Horror24.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0225','If the Dead Belong Here',
-	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister — without falling for the charming stranger guiding her.',
+	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister â€” without falling for the charming stranger guiding her.',
 	 '/uploads/Horror/Horror25.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0226','Atlas of Unknowable Things',
-	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killers’ paths collide in a deadly game of justice.',
+	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killersâ€™ paths collide in a deadly game of justice.',
 	 '/uploads/Horror/Horror26.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0227','Our Vicious Descent',
-	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears — and returns decades later for revenge.',
+	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears â€” and returns decades later for revenge.',
 	 '/uploads/Horror/Horror27.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0228','Final Cut',
-	 'A young couple’s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
+	 'A young coupleâ€™s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
 	 '/uploads/Horror/Horror28.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0229','And the River Drags Her Down',
-	 'Fourteen eerie tales selected by Roald Dahl himself — classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
+	 'Fourteen eerie tales selected by Roald Dahl himself â€” classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
 	 '/uploads/Horror/Horror29.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0230','The Midnight Knock',
-	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jackson’s timeless tale of madness and the supernatural.',
+	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jacksonâ€™s timeless tale of madness and the supernatural.',
 	 '/uploads/Horror/Horror30.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
-	-- SP0231 → SP0240
+	-- SP0231 â†’ SP0240
 	('SP0231','The Night That Finds Us All',
 	 'A chilling Southern horror set in 1950s Florida. A young boy sent to a reform school must survive cruelty and ghosts haunting its halls.',
 	 '/uploads/Horror/Horror31.jpg',
@@ -320,42 +330,42 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0233','Ill Quit When Im Dead',
-	 'Mary Shelley’s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
+	 'Mary Shelleyâ€™s gothic masterpiece about a scientist who creates life, only to be destroyed by his own creation and guilt.',
 	 '/uploads/Horror/Horror33.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0234','The Unveiling',
-	 'A woman returns to her childhood home made famous by her father’s horror memoir, only to discover the terrifying truth behind it.',
+	 'A woman returns to her childhood home made famous by her fatherâ€™s horror memoir, only to discover the terrifying truth behind it.',
 	 '/uploads/Horror/Horror34.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0235','Vampires at Sea',
-	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister — without falling for the charming stranger guiding her.',
+	 'In a deadly haunted mansion game, Ophelia must survive traps and demons to save her sister â€” without falling for the charming stranger guiding her.',
 	 '/uploads/Horror/Horror35.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0236','Slayers of Old',
-	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killers’ paths collide in a deadly game of justice.',
+	 'A gripping Stephen King thriller weaving revenge, obsession, and morality as two killersâ€™ paths collide in a deadly game of justice.',
 	 '/uploads/Horror/Horror36.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0237','Herculine',
-	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears — and returns decades later for revenge.',
+	 'In the town of Derry, children face a terrifying entity that takes the form of their deepest fears â€” and returns decades later for revenge.',
 	 '/uploads/Horror/Horror37.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0238','The Resurrectionist',
-	 'A young couple’s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
+	 'A young coupleâ€™s dream home becomes a nightmare when strangers claiming to be its former residents refuse to leave. Reality soon unravels.',
 	 '/uploads/Horror/Horror38.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0239','Psychopomp & Circumstance',
-	 'Fourteen eerie tales selected by Roald Dahl himself — classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
+	 'Fourteen eerie tales selected by Roald Dahl himself â€” classic ghost stories meant to unsettle, disturb, and chill you to the bone.',
 	 '/uploads/Horror/Horror39.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 	
 	('SP0240','Uncanny Valley Girls: Essays on Horror, Survival, and Love',
-	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jackson’s timeless tale of madness and the supernatural.',
+	 'Four strangers explore a haunted mansion that preys on their fears. Shirley Jacksonâ€™s timeless tale of madness and the supernatural.',
 	 '/uploads/Horror/Horror40.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP02', NULL),
 
@@ -367,12 +377,12 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
 	('SP0302','The Hobbit: Illustrated Edition',
-	 'J.R.R. Tolkien’s timeless tale of Bilbo Baggins and his unexpected journey through Middle-earth. A beautifully illustrated modern classic of adventure and courage.',
+	 'J.R.R. Tolkienâ€™s timeless tale of Bilbo Baggins and his unexpected journey through Middle-earth. A beautifully illustrated modern classic of adventure and courage.',
 	 '/uploads/Fantasy/Fantasy2.jpg',
 	 'J.R.R. Tolkien','HarperCollins', TRUE, 'LSP03', NULL),
 	
 	('SP0303','The Alchemist',
-	 'Paulo Coelho’s modern classic about following your dreams and listening to your heart. A parable of self-discovery that has inspired millions worldwide.',
+	 'Paulo Coelhoâ€™s modern classic about following your dreams and listening to your heart. A parable of self-discovery that has inspired millions worldwide.',
 	 '/uploads/Fantasy/Fantasy3.jpg',
 	 'Paulo Coelho','HarperOne', TRUE, 'LSP03', NULL),
 	
@@ -382,7 +392,7 @@ VALUES
 	 'Sarah J. Maas','Bloomsbury', TRUE, 'LSP03', NULL),
 	
 	('SP0305','Throne of Glass',
-	 'The beginning of Sarah J. Maas’s epic fantasy series. Celaena, a deadly assassin, is offered freedom if she can win a brutal competition to become the King’s Champion.',
+	 'The beginning of Sarah J. Maasâ€™s epic fantasy series. Celaena, a deadly assassin, is offered freedom if she can win a brutal competition to become the Kingâ€™s Champion.',
 	 '/uploads/Fantasy/Fantasy5.jpg',
 	 'Sarah J. Maas','Bloomsbury', TRUE, 'LSP03', NULL),
 	
@@ -407,7 +417,7 @@ VALUES
 	 'Sarah J. Maas','Bloomsbury', TRUE, 'LSP03', NULL),
 	
 	('SP0310','Empire of Storms',
-	 'Aelin’s path to the throne becomes more perilous than ever as kingdoms fall into chaos. A gripping continuation of the Throne of Glass saga filled with war, magic, and destiny.',
+	 'Aelinâ€™s path to the throne becomes more perilous than ever as kingdoms fall into chaos. A gripping continuation of the Throne of Glass saga filled with war, magic, and destiny.',
 	 '/uploads/Fantasy/Fantasy10.jpg',
 	 'Sarah J. Maas','Bloomsbury', TRUE, 'LSP03', NULL),
 	
@@ -417,12 +427,12 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
 	('SP0312','Bonds of Hercules',
-	 'J.R.R. Tolkien’s timeless tale of Bilbo Baggins and his unexpected journey through Middle-earth. A beautifully illustrated modern classic of adventure and courage.',
+	 'J.R.R. Tolkienâ€™s timeless tale of Bilbo Baggins and his unexpected journey through Middle-earth. A beautifully illustrated modern classic of adventure and courage.',
 	 '/uploads/Fantasy/Fantasy12.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
 	('SP0313','The Wrath of the Fallen',
-	 'Paulo Coelho’s modern classic about following your dreams and listening to your heart. A parable of self-discovery that has inspired millions worldwide.',
+	 'Paulo Coelhoâ€™s modern classic about following your dreams and listening to your heart. A parable of self-discovery that has inspired millions worldwide.',
 	 '/uploads/Fantasy/Fantasy13.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
@@ -432,7 +442,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
 	('SP0315','Hazelthorn',
-	 'The beginning of Sarah J. Maas’s epic fantasy series. Celaena, a deadly assassin, is offered freedom if she can win a brutal competition to become the King’s Champion.',
+	 'The beginning of Sarah J. Maasâ€™s epic fantasy series. Celaena, a deadly assassin, is offered freedom if she can win a brutal competition to become the Kingâ€™s Champion.',
 	 '/uploads/Fantasy/Fantasy15.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
@@ -457,7 +467,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 	
 	('SP0320','The Hearth Witch''s Guide to Magic & Murder',
-	 'Aelin’s path to the throne becomes more perilous than ever as kingdoms fall into chaos. A gripping continuation of the Throne of Glass saga filled with war, magic, and destiny.',
+	 'Aelinâ€™s path to the throne becomes more perilous than ever as kingdoms fall into chaos. A gripping continuation of the Throne of Glass saga filled with war, magic, and destiny.',
 	 '/uploads/Fantasy/Fantasy20.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP03', NULL),
 
@@ -513,17 +523,17 @@ VALUES
 	 'James Dicks','Various Publishers', TRUE, 'LSP04', NULL),
 	
 	('SP0411','The Unconventional Leader',
-	 'A fresh playbook for leading beyond the rulebook—challenge assumptions, empower teams, and create accountable, adaptive cultures.',
+	 'A fresh playbook for leading beyond the rulebookâ€”challenge assumptions, empower teams, and create accountable, adaptive cultures.',
 	 '/uploads/Business/Business11.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
 	('SP0412','Unconventional Business',
-	 'Practical strategies for building bold, resilient companies—lean experiments, customer obsession, and differentiated positioning.',
+	 'Practical strategies for building bold, resilient companiesâ€”lean experiments, customer obsession, and differentiated positioning.',
 	 '/uploads/Business/Business12.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
 	('SP0413','Integrity Moments',
-	 'Short, thoughtful reflections on ethics at work—honesty, accountability, and trust as daily leadership practices.',
+	 'Short, thoughtful reflections on ethics at workâ€”honesty, accountability, and trust as daily leadership practices.',
 	 '/uploads/Business/Business13.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
@@ -533,12 +543,12 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
 	('SP0415','Work that Matters',
-	 'A purpose-driven approach to career design—clarify values, focus on impact, and align strengths to meaningful goals.',
+	 'A purpose-driven approach to career designâ€”clarify values, focus on impact, and align strengths to meaningful goals.',
 	 '/uploads/Business/Business15.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
 	('SP0416','94X',
-	 'A growth framework for scaling results—set clear metrics, systematize operations, and compound small wins into outsized outcomes.',
+	 'A growth framework for scaling resultsâ€”set clear metrics, systematize operations, and compound small wins into outsized outcomes.',
 	 '/uploads/Business/Business16.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 	
@@ -548,17 +558,17 @@ VALUES
 	 'Dee Ann Turner','Baker Books', TRUE, 'LSP04', NULL),
 	
 	('SP0418','Every Good Endeavor',
-	 'A perspective on integrating faith and work—vocation, calling, and contributing to the common good with excellence.',
+	 'A perspective on integrating faith and workâ€”vocation, calling, and contributing to the common good with excellence.',
 	 '/uploads/Business/Business18.jpg',
 	 'Timothy Keller; Katherine Leary Alsdorf','Dutton', TRUE, 'LSP04', NULL),
 	
 	('SP0419','Excellence Wins',
-	 'Lessons in world-class service and leadership—set high standards, empower teams, and deliver consistency at scale.',
+	 'Lessons in world-class service and leadershipâ€”set high standards, empower teams, and deliver consistency at scale.',
 	 '/uploads/Business/Business19.jpg',
 	 'Horst Schulze; Dean Merrill','Zondervan', TRUE, 'LSP04', NULL),
 	
 	('SP0420','FIRE in the Workplace',
-	 'A practical guide to preventing and managing workplace crises—policies, training, and culture that reduce risk and burnout.',
+	 'A practical guide to preventing and managing workplace crisesâ€”policies, training, and culture that reduce risk and burnout.',
 	 '/uploads/Business/Business20.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP04', NULL),
 
@@ -780,7 +790,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
 	('SP0703','The Complete Cookbook for Young Chefs: 100+ Recipes that You will Love to Cook and Eat',
-	 'Created by Americas Test Kitchen, this award-winning cookbook helps kids master over 100 delicious recipes—from breakfast to dinner—with full-color photos and step-by-step guides.',
+	 'Created by Americas Test Kitchen, this award-winning cookbook helps kids master over 100 delicious recipesâ€”from breakfast to dinnerâ€”with full-color photos and step-by-step guides.',
 	 '/uploads/Cook/Cook3.jpg',
 	 'America''s Test Kitchen Kids','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -795,12 +805,12 @@ VALUES
 	 'America''s Test Kitchen Kids','Various Publishers', TRUE, 'LSP07', NULL),
 	
 	('SP0706','Salt, Fat, Acid, Heat: Mastering the Elements of Good Cooking',
-	 'Samin Nosrat explains the four key elements of cooking—salt, fat, acid, and heat—through science, storytelling, and recipes that make you a confident home cook.',
+	 'Samin Nosrat explains the four key elements of cookingâ€”salt, fat, acid, and heatâ€”through science, storytelling, and recipes that make you a confident home cook.',
 	 '/uploads/Cook/Cook6.jpg',
 	 'Samin Nosrat','Simon & Schuster', TRUE, 'LSP07', NULL),
 	
 	('SP0707','The Complete Anti-Inflammatory Diet for Beginners: A No-Stress Meal Plan with Easy Recipes to Heal the Immune System',
-	 'A practical beginner’s guide featuring meal plans and simple recipes designed to reduce inflammation and boost overall health naturally.',
+	 'A practical beginnerâ€™s guide featuring meal plans and simple recipes designed to reduce inflammation and boost overall health naturally.',
 	 '/uploads/Cook/Cook7.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -810,7 +820,7 @@ VALUES
 	 'Tieghan Gerard','Clarkson Potter', TRUE, 'LSP07', NULL),
 	
 	('SP0709','The King Arthur Baking Company Big Book of Bread: 125+ Recipes for Every Baker (a Cookbook)',
-	 'A complete guide to bread baking with over 125 tried-and-true recipes—from rustic loaves to soft sandwich breads—by America’s most trusted baking experts.',
+	 'A complete guide to bread baking with over 125 tried-and-true recipesâ€”from rustic loaves to soft sandwich breadsâ€”by Americaâ€™s most trusted baking experts.',
 	 '/uploads/Cook/Cook9.jpg',
 	 'King Arthur Baking Company','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -830,7 +840,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
 	('SP0713','Mini Quick & Easy Vietnamese Cooking',
-	 'Created by Americas Test Kitchen, this award-winning cookbook helps kids master over 100 delicious recipes—from breakfast to dinner—with full-color photos and step-by-step guides.',
+	 'Created by Americas Test Kitchen, this award-winning cookbook helps kids master over 100 delicious recipesâ€”from breakfast to dinnerâ€”with full-color photos and step-by-step guides.',
 	 '/uploads/Cook/Cook13.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -844,13 +854,13 @@ VALUES
 	 '/uploads/Cook/Cook15.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
-	('SP0716','Peñin Guide Spanish Wine 2025 (Spanish Wines)',
-	 'Samin Nosrat explains the four key elements of cooking—salt, fat, acid, and heat—through science, storytelling, and recipes that make you a confident home cook.',
+	('SP0716','PeÃ±in Guide Spanish Wine 2025 (Spanish Wines)',
+	 'Samin Nosrat explains the four key elements of cookingâ€”salt, fat, acid, and heatâ€”through science, storytelling, and recipes that make you a confident home cook.',
 	 '/uploads/Cook/Cook16.jpg',
-	 'Peñín Guide','Various Publishers', TRUE, 'LSP07', NULL),
+	 'PeÃ±Ã­n Guide','Various Publishers', TRUE, 'LSP07', NULL),
 	
 	('SP0717','Dac Biet: An Extra-Special Vietnamese Cookbook',
-	 'A practical beginner’s guide featuring meal plans and simple recipes designed to reduce inflammation and boost overall health naturally.',
+	 'A practical beginnerâ€™s guide featuring meal plans and simple recipes designed to reduce inflammation and boost overall health naturally.',
 	 '/uploads/Cook/Cook17.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -860,7 +870,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
 	('SP0719','Italian Coastal: Recipes and Stories from Where the Land Meets the Sea',
-	 'A complete guide to bread baking with over 125 tried-and-true recipes—from rustic loaves to soft sandwich breads—by America’s most trusted baking experts.',
+	 'A complete guide to bread baking with over 125 tried-and-true recipesâ€”from rustic loaves to soft sandwich breadsâ€”by Americaâ€™s most trusted baking experts.',
 	 '/uploads/Cook/Cook19.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP07', NULL),
 	
@@ -873,7 +883,7 @@ VALUES
 
 -- LSP08 Poetry
 	('SP0801','Beowulf: A New Verse Translation',
-	 'A timeless epic of heroism and fate. Seamus Heaney’s award-winning translation brings new life to this ancient tale of courage and mortality.',
+	 'A timeless epic of heroism and fate. Seamus Heaneyâ€™s award-winning translation brings new life to this ancient tale of courage and mortality.',
 	 '/uploads/Poetry/Poetry1.jpg',
 	 'Seamus Heaney (Translator)','W. W. Norton & Company', TRUE, 'LSP08', NULL),
 	
@@ -883,12 +893,12 @@ VALUES
 	 'Shel Silverstein','HarperCollins', TRUE, 'LSP08', NULL),
 	
 	('SP0803','Save Me An Orange',
-	 'A tender debut exploring pain, love, and self-acceptance. Hayley’s poetry captures fleeting joy and the beauty of simply sharing an orange.',
+	 'A tender debut exploring pain, love, and self-acceptance. Hayleyâ€™s poetry captures fleeting joy and the beauty of simply sharing an orange.',
 	 '/uploads/Poetry/Poetry3.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP08', NULL),
 	
 	('SP0804','Lord of the Butterflies',
-	 'Andrea Gibson’s award-winning poetry on gender, love, and loss — powerful, emotional, and crafted with lyrical precision.',
+	 'Andrea Gibsonâ€™s award-winning poetry on gender, love, and loss â€” powerful, emotional, and crafted with lyrical precision.',
 	 '/uploads/Poetry/Poetry4.jpg',
 	 'Andrea Gibson','Button Poetry', TRUE, 'LSP08', NULL),
 	
@@ -898,17 +908,17 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP08', NULL),
 	
 	('SP0806','Devotions: The Selected Poems of Mary Oliver',
-	 'A landmark collection spanning five decades of Mary Oliver’s Pulitzer-winning poetry — celebrating nature, love, and the human spirit.',
+	 'A landmark collection spanning five decades of Mary Oliverâ€™s Pulitzer-winning poetry â€” celebrating nature, love, and the human spirit.',
 	 '/uploads/Poetry/Poetry6.jpg',
 	 'Mary Oliver','Penguin Press', TRUE, 'LSP08', NULL),
 	
 	('SP0807','The Prophet (Reader''s Library Classics)',
-	 'Kahlil Gibran’s spiritual masterpiece exploring love, life, and purpose. A timeless collection of poetic wisdom and soulful reflection.',
+	 'Kahlil Gibranâ€™s spiritual masterpiece exploring love, life, and purpose. A timeless collection of poetic wisdom and soulful reflection.',
 	 '/uploads/Poetry/Poetry7.jpg',
 	 'Kahlil Gibran','Various Publishers', TRUE, 'LSP08', NULL),
 	
 	('SP0808','A Light in the Attic (Special Edition)',
-	 'Shel Silverstein’s classic poetry collection returns with new poems — full of wit, wonder, and his signature illustrations.',
+	 'Shel Silversteinâ€™s classic poetry collection returns with new poems â€” full of wit, wonder, and his signature illustrations.',
 	 '/uploads/Poetry/Poetry8.jpg',
 	 'Shel Silverstein','HarperCollins', TRUE, 'LSP08', NULL),
 	
@@ -918,7 +928,7 @@ VALUES
 	 'Cleo Wade','Atria Books', TRUE, 'LSP08', NULL),
 	
 	('SP0810','I Hope You Remember: Poems on Loving, Longing, and Living',
-	 'Josie Balka’s debut poetry collection on love, nostalgia, and growth — honest, relatable, and deeply emotional.',
+	 'Josie Balkaâ€™s debut poetry collection on love, nostalgia, and growth â€” honest, relatable, and deeply emotional.',
 	 '/uploads/Poetry/Poetry10.jpg',
 	 'Josie Balka','Various Publishers', TRUE, 'LSP08', NULL),
 
@@ -953,7 +963,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP08', NULL),
 
 	('SP0817','Small Fires',
-	 'Short, fiery poems that burn with clarity—about love, loss, and getting through.',
+	 'Short, fiery poems that burn with clarityâ€”about love, loss, and getting through.',
 	 '/uploads/Poetry/Poetry17.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP08', NULL),
 
@@ -977,12 +987,12 @@ VALUES
 
 -- LSP09 Art
 	('SP0901','The Art Thief: A True Story of Love, Crime, and a Dangerous Obsession',
-	 'The true story of Stéphane Breitwieser — the world’s most successful art thief. For years he stole masterpieces from museums across Europe, keeping them not for profit, but for love.',
+	 'The true story of StÃ©phane Breitwieser â€” the worldâ€™s most successful art thief. For years he stole masterpieces from museums across Europe, keeping them not for profit, but for love.',
 	 '/uploads/Art/Art1.jpg',
 	 'Michael Finkel','Knopf', TRUE, 'LSP09', NULL),
 	
 	('SP0902','The Reverse Coloring Book: The Book Has the Colors, You Draw the Lines!',
-	 'A creative twist on coloring — the colors are already there, and you draw the lines. Let your imagination flow freely across watercolor pages filled with shapes and inspiration.',
+	 'A creative twist on coloring â€” the colors are already there, and you draw the lines. Let your imagination flow freely across watercolor pages filled with shapes and inspiration.',
 	 '/uploads/Art/Art2.jpg',
 	 'Kendra Norton','Workman Publishing', TRUE, 'LSP09', NULL),
 	
@@ -992,7 +1002,7 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP09', NULL),
 	
 	('SP0904','The Art of War',
-	 'Sun Tzu’s timeless guide to strategy, leadership, and wisdom. Lessons from ancient warfare that still shape modern business, politics, and personal success.',
+	 'Sun Tzuâ€™s timeless guide to strategy, leadership, and wisdom. Lessons from ancient warfare that still shape modern business, politics, and personal success.',
 	 '/uploads/Art/Art4.jpg',
 	 'Sun Tzu','Various Publishers', TRUE, 'LSP09', NULL),
 	
@@ -1002,7 +1012,7 @@ VALUES
 	 'Ernest R. Norling','Dover Publications', TRUE, 'LSP09', NULL),
 	
 	('SP0906','All the Beauty in the World: The Metropolitan Museum of Art and Me',
-	 'A museum guard’s moving memoir inside the halls of the Met. A deeply personal journey through art, humanity, and the quiet power of beauty.',
+	 'A museum guardâ€™s moving memoir inside the halls of the Met. A deeply personal journey through art, humanity, and the quiet power of beauty.',
 	 '/uploads/Art/Art6.jpg',
 	 'Patrick Bringley','Avid Reader Press', TRUE, 'LSP09', NULL),
 	
@@ -1011,23 +1021,23 @@ VALUES
 	 '/uploads/Art/Art7.jpg',
 	 'Lance Dane','Inner Traditions', TRUE, 'LSP09', NULL),
 	
-	('SP0908','Morpho: Simplified Forms – Anatomy for Artists',
+	('SP0908','Morpho: Simplified Forms â€“ Anatomy for Artists',
 	 'Michel Lauricella simplifies human anatomy into basic shapes, helping artists understand structure and proportion. A must-have for improving figure drawing skills.',
 	 '/uploads/Art/Art8.jpg',
 	 'Michel Lauricella','Rocky Nook', TRUE, 'LSP09', NULL),
 	
 	('SP0909','Paint by Sticker: Works of Art',
-	 'Recreate twelve famous paintings sticker by sticker — from Van Gogh to Renoir. Relaxing, creative, and frame-worthy when finished.',
+	 'Recreate twelve famous paintings sticker by sticker â€” from Van Gogh to Renoir. Relaxing, creative, and frame-worthy when finished.',
 	 '/uploads/Art/Art9.jpg',
 	 'Workman Publishing','Workman Publishing', TRUE, 'LSP09', NULL),
 	
-	('SP0910','The Artist’s Way Workbook',
+	('SP0910','The Artistâ€™s Way Workbook',
 	 'A practical workbook for unlocking creativity and self-expression. Filled with exercises and reflections to help you rediscover your artistic potential.',
 	 '/uploads/Art/Art10.jpg',
 	 'Julia Cameron','TarcherPerigee', TRUE, 'LSP09', NULL),
 	
 	('SP0911','Pattern Cutting Deconstructed: Wearable Art',
-	 'An exploration of experimental pattern cutting and sculptural garments—step-by-step methods, draping ideas, and case studies for wearable art.',
+	 'An exploration of experimental pattern cutting and sculptural garmentsâ€”step-by-step methods, draping ideas, and case studies for wearable art.',
 	 '/uploads/Art/Art11.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP09', NULL),
 	
@@ -1037,22 +1047,22 @@ VALUES
 	 'Various Authors','Various Publishers', TRUE, 'LSP09', NULL),
 	
 	('SP0913','Aino + Alvar Aalto: A Life Together',
-	 'An intimate portrait of Aino and Alvar Aalto’s partnership, featuring modernist architecture, furniture, and correspondence across their careers.',
+	 'An intimate portrait of Aino and Alvar Aaltoâ€™s partnership, featuring modernist architecture, furniture, and correspondence across their careers.',
 	 '/uploads/Art/Art13.jpg',
 	 'Various Authors','Phaidon', TRUE, 'LSP09', NULL),
 	
 	('SP0914','S.O.A.P class: Create your own set of prompt cards',
-	 'A hands-on workbook to design personal creative prompt cards—frameworks, templates, and exercises to spark ideas on demand.',
+	 'A hands-on workbook to design personal creative prompt cardsâ€”frameworks, templates, and exercises to spark ideas on demand.',
 	 '/uploads/Art/Art14.jpg',
 	 'Various Authors','Various Publishers', TRUE, 'LSP09', NULL),
 	
 	('SP0915','Sybil and David Yurman: Artists and Jewelers',
-	 'A visual history of the Yurmans’ studio practice—sculptural jewelry, brand evolution, and signature cable motifs in rich photography.',
+	 'A visual history of the Yurmansâ€™ studio practiceâ€”sculptural jewelry, brand evolution, and signature cable motifs in rich photography.',
 	 '/uploads/Art/Art15.jpg',
 	 'Various Authors','Rizzoli', TRUE, 'LSP09', NULL),
 	
 	('SP0916','Japan Style',
-	 'A curated survey of Japanese aesthetics—from wabi-sabi interiors to craft, textiles, and garden design—blending tradition with minimalism.',
+	 'A curated survey of Japanese aestheticsâ€”from wabi-sabi interiors to craft, textiles, and garden designâ€”blending tradition with minimalism.',
 	 '/uploads/Art/Art16.jpg',
 	 'Various Authors','Tuttle Publishing', TRUE, 'LSP09', NULL),
 	
@@ -1080,7 +1090,7 @@ VALUES
 	 'Fumio Sasaki','W. W. Norton & Company', TRUE, 'LSP10', NULL),
 	
 	('SP1004','The Death and Life of Great American Cities',
-	 'Jane Jacobs’s classic critique of modern urban planning. She argues that true city vitality comes from diversity, street life, and human scale rather than rigid design and planning theories.',
+	 'Jane Jacobsâ€™s classic critique of modern urban planning. She argues that true city vitality comes from diversity, street life, and human scale rather than rigid design and planning theories.',
 	 '/uploads/Architecture/Architecture4.jpg',
 	 'Jane Jacobs','Vintage', TRUE, 'LSP10', NULL),
 	
@@ -1100,7 +1110,7 @@ VALUES
 	 'Architectural Digest Editors','Abrams', TRUE, 'LSP10', NULL),
 	
 	('SP1008','The Interior Design Handbook: Furnish, Decorate, and Style Your Space',
-	 'A practical handbook that breaks down interior design principles—covering color, balance, lighting, and proportion—to help you create stylish and functional spaces.',
+	 'A practical handbook that breaks down interior design principlesâ€”covering color, balance, lighting, and proportionâ€”to help you create stylish and functional spaces.',
 	 '/uploads/Architecture/Architecture8.jpg',
 	 'Frida Ramstedt','Clarkson Potter', TRUE, 'LSP10', NULL),
 	
@@ -1130,7 +1140,7 @@ VALUES
 	 'Paul Cocksedge','Rizzoli', TRUE, 'LSP10', NULL),
 	
 	('SP1014','Alessandro Mendini: Imagination Takes Command',
-	 'Jane Jacobs’s classic critique of modern urban planning. She argues that true city vitality comes from diversity, street life, and human scale rather than rigid design and planning theories.',
+	 'Jane Jacobsâ€™s classic critique of modern urban planning. She argues that true city vitality comes from diversity, street life, and human scale rather than rigid design and planning theories.',
 	 '/uploads/Architecture/Architecture14.jpg',
 	 'Various Authors','Rizzoli', TRUE, 'LSP10', NULL),
 	
@@ -1150,7 +1160,7 @@ VALUES
 	 'Various Authors','Phaidon', TRUE, 'LSP10', NULL),
 	
 	('SP1018','Thomas Heatherwick: Making',
-	 'A practical handbook that breaks down interior design principles—covering color, balance, lighting, and proportion—to help you create stylish and functional spaces.',
+	 'A practical handbook that breaks down interior design principlesâ€”covering color, balance, lighting, and proportionâ€”to help you create stylish and functional spaces.',
 	 '/uploads/Architecture/Architecture18.jpg',
 	 'Thomas Heatherwick','Thames & Hudson', TRUE, 'LSP10', NULL),
 	
@@ -1175,7 +1185,7 @@ VALUES
 	 '/uploads/Modelkit/Modelkit2.jpg',
 	 'Motor Nuclear','Motor Nuclear', TRUE, 'LSP11', NULL),
 	
-	('SP1103','Bandai MG 1/100 Turn A GUNDAM (∀ Gundam) Assembly Model',
+	('SP1103','Bandai MG 1/100 Turn A GUNDAM (âˆ€ Gundam) Assembly Model',
 	 'MG Turn A Gundam with signature chest "mustache", snap-fit build, core fighter gimmick, and accessories like beam rifle, shield, and sabers.',
 	 '/uploads/Modelkit/Modelkit3.jpg',
 	 'Bandai','BANDAI SPIRITS', TRUE, 'LSP11', NULL),
@@ -1207,65 +1217,65 @@ VALUES
 
 
 -- LSP12 Figure
-	('SP1201','Genuine Bandai Dragon Ball – Yamcha & Puar History Box Figure',
-	 'Yamcha cùng Puar trong dòng History Box, tạo dáng động và chi tiết sắc nét; sơn đổ bóng đẹp và độ hoàn thiện cao cho fan Dragon Ball.',
+	('SP1201','Genuine Bandai Dragon Ball â€“ Yamcha & Puar History Box Figure',
+	 'Yamcha cÃ¹ng Puar trong dÃ²ng History Box, táº¡o dÃ¡ng Ä‘á»™ng vÃ  chi tiáº¿t sáº¯c nÃ©t; sÆ¡n Ä‘á»• bÃ³ng Ä‘áº¹p vÃ  Ä‘á»™ hoÃ n thiá»‡n cao cho fan Dragon Ball.',
 	 '/uploads/Figure/Figure1.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1202','Dragon Ball – Gogeta Super Saiyan Grandista Figure genuine Bandai',
-	 'Gogeta dạng Super Saiyan thuộc dòng Grandista với tỉ lệ lớn, cơ bắp khắc họa rõ ràng và nếp áo mượt, thích hợp trưng bày nổi bật.',
+	('SP1202','Dragon Ball â€“ Gogeta Super Saiyan Grandista Figure genuine Bandai',
+	 'Gogeta dáº¡ng Super Saiyan thuá»™c dÃ²ng Grandista vá»›i tá»‰ lá»‡ lá»›n, cÆ¡ báº¯p kháº¯c há»a rÃµ rÃ ng vÃ  náº¿p Ã¡o mÆ°á»£t, thÃ­ch há»£p trÆ°ng bÃ y ná»•i báº­t.',
 	 '/uploads/Figure/Figure2.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1203','Dragon Ball – Majinbuu Ichiban Kuji Last One Figure (Fat Buu) genuine Bandai',
-	 'Phiên bản Last One của Majin Buu (Fat Buu) trong Ichiban Kuji: kích thước ấn tượng, khuôn mặt biểu cảm và lớp sơn bóng bẩy.',
+	('SP1203','Dragon Ball â€“ Majinbuu Ichiban Kuji Last One Figure (Fat Buu) genuine Bandai',
+	 'PhiÃªn báº£n Last One cá»§a Majin Buu (Fat Buu) trong Ichiban Kuji: kÃ­ch thÆ°á»›c áº¥n tÆ°á»£ng, khuÃ´n máº·t biá»ƒu cáº£m vÃ  lá»›p sÆ¡n bÃ³ng báº©y.',
 	 '/uploads/Figure/Figure3.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1204','Genuine Bandai Yatogami Tohka Glitter & Glamours – Date A Live V Figure',
-	 'Tohka Yatogami từ Date A Live trong dòng Glitter & Glamours: tạo dáng duyên dáng, nếp váy chi tiết và sắc tím đặc trưng.',
+	('SP1204','Genuine Bandai Yatogami Tohka Glitter & Glamours â€“ Date A Live V Figure',
+	 'Tohka Yatogami tá»« Date A Live trong dÃ²ng Glitter & Glamours: táº¡o dÃ¡ng duyÃªn dÃ¡ng, náº¿p vÃ¡y chi tiáº¿t vÃ  sáº¯c tÃ­m Ä‘áº·c trÆ°ng.',
 	 '/uploads/Figure/Figure4.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1205','Dragon Ball – Vegeta Blue Blood Of Saiyans Figure genuine Bandai',
-	 'Vegeta dạng Super Saiyan Blue thuộc series Blood of Saiyans, tư thế mạnh mẽ; hiệu ứng shading và vết xước tăng độ chân thực.',
+	('SP1205','Dragon Ball â€“ Vegeta Blue Blood Of Saiyans Figure genuine Bandai',
+	 'Vegeta dáº¡ng Super Saiyan Blue thuá»™c series Blood of Saiyans, tÆ° tháº¿ máº¡nh máº½; hiá»‡u á»©ng shading vÃ  váº¿t xÆ°á»›c tÄƒng Ä‘á»™ chÃ¢n thá»±c.',
 	 '/uploads/Figure/Figure5.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1206','Dragon Ball – Songoku Super Saiyan 3 1/6 Scale Resin Model DK Studio',
-	 'Mô hình resin tỉ lệ 1/6 của Son Goku Super Saiyan 3 từ DK Studio: mái tóc dài hoành tráng, dáng đứng vững và chi tiết cơ bắp nổi khối.',
+	('SP1206','Dragon Ball â€“ Songoku Super Saiyan 3 1/6 Scale Resin Model DK Studio',
+	 'MÃ´ hÃ¬nh resin tá»‰ lá»‡ 1/6 cá»§a Son Goku Super Saiyan 3 tá»« DK Studio: mÃ¡i tÃ³c dÃ i hoÃ nh trÃ¡ng, dÃ¡ng Ä‘á»©ng vá»¯ng vÃ  chi tiáº¿t cÆ¡ báº¯p ná»•i khá»‘i.',
 	 '/uploads/Figure/Figure6.jpg',
 	 'DK Studio','DK Studio', TRUE, 'LSP12', NULL),
 	
-	('SP1207','One Piece – Doflamingo Ichiban Kuji Masterlise Figure genuine Bandai',
-	 'Doflamingo phiên bản Masterlise với áo lông biểu tượng, tạo dáng tự tin; chi tiết gân cơ và đường gấp vải được xử lý kỹ.',
+	('SP1207','One Piece â€“ Doflamingo Ichiban Kuji Masterlise Figure genuine Bandai',
+	 'Doflamingo phiÃªn báº£n Masterlise vá»›i Ã¡o lÃ´ng biá»ƒu tÆ°á»£ng, táº¡o dÃ¡ng tá»± tin; chi tiáº¿t gÃ¢n cÆ¡ vÃ  Ä‘Æ°á»ng gáº¥p váº£i Ä‘Æ°á»£c xá»­ lÃ½ ká»¹.',
 	 '/uploads/Figure/Figure7.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1208','One Piece – Zoro Dressrosa Battle Ichiban Kuji Figure genuine Banpresto',
-	 'Zoro trạng thái chiến đấu tại Dressrosa: tư thế vung kiếm dứt khoát, cơ bắp rắn chắc và nước sơn mịn, bền màu.',
+	('SP1208','One Piece â€“ Zoro Dressrosa Battle Ichiban Kuji Figure genuine Banpresto',
+	 'Zoro tráº¡ng thÃ¡i chiáº¿n Ä‘áº¥u táº¡i Dressrosa: tÆ° tháº¿ vung kiáº¿m dá»©t khoÃ¡t, cÆ¡ báº¯p ráº¯n cháº¯c vÃ  nÆ°á»›c sÆ¡n má»‹n, bá»n mÃ u.',
 	 '/uploads/Figure/Figure8.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1209','One Piece – Bonney Girls Collection Vol.2 Ichiban Kuji Figure genuine Banpresto',
-	 'Jewelry Bonney trong dòng Girls Collection Vol.2: tạo dáng gợi cảm, màu sắc tươi và các chi tiết phụ kiện tinh xảo.',
+	('SP1209','One Piece â€“ Bonney Girls Collection Vol.2 Ichiban Kuji Figure genuine Banpresto',
+	 'Jewelry Bonney trong dÃ²ng Girls Collection Vol.2: táº¡o dÃ¡ng gá»£i cáº£m, mÃ u sáº¯c tÆ°Æ¡i vÃ  cÃ¡c chi tiáº¿t phá»¥ kiá»‡n tinh xáº£o.',
 	 '/uploads/Figure/Figure9.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1210','One Piece – Boa Hancock Glitter & Glamours Figure genuine Bandai',
-	 'Boa Hancock dòng Glitter & Glamours với tỷ lệ chuẩn, nếp váy và tóc đổ mượt; phù hợp trưng bày cùng bộ sưu tập One Piece.',
+	('SP1210','One Piece â€“ Boa Hancock Glitter & Glamours Figure genuine Bandai',
+	 'Boa Hancock dÃ²ng Glitter & Glamours vá»›i tá»· lá»‡ chuáº©n, náº¿p vÃ¡y vÃ  tÃ³c Ä‘á»• mÆ°á»£t; phÃ¹ há»£p trÆ°ng bÃ y cÃ¹ng bá»™ sÆ°u táº­p One Piece.',
 	 '/uploads/Figure/Figure10.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 	
-	('SP1211','Premium One Piece – Sabo Premium Figure The Metallic Genuine Bandai',
-	 'Sabo phiên bản Metallic hoàn thiện lớp sơn ánh kim ấn tượng; tạo dáng mạnh mẽ, phù hợp làm điểm nhấn tủ trưng bày.',
+	('SP1211','Premium One Piece â€“ Sabo Premium Figure The Metallic Genuine Bandai',
+	 'Sabo phiÃªn báº£n Metallic hoÃ n thiá»‡n lá»›p sÆ¡n Ã¡nh kim áº¥n tÆ°á»£ng; táº¡o dÃ¡ng máº¡nh máº½, phÃ¹ há»£p lÃ m Ä‘iá»ƒm nháº¥n tá»§ trÆ°ng bÃ y.',
 	 '/uploads/Figure/Figure11.jpg',
 	 'Banpresto','BANDAI SPIRITS', TRUE, 'LSP12', NULL),
 
 
 -- LSP13 Calculator
 	('SP1301','Casio fx-880BTG-BK',
-	 'Premium scientific calculator in elegant black with Bluetooth connectivity, Natural Textbook Display, and fast calculations — ideal for students and professionals.',
+	 'Premium scientific calculator in elegant black with Bluetooth connectivity, Natural Textbook Display, and fast calculations â€” ideal for students and professionals.',
 	 '/uploads/Calculator/Calculator1.jpg',
 	 'Casio','Casio', TRUE, 'LSP13', NULL),
 	
@@ -1302,7 +1312,7 @@ VALUES
 	 'Various Brands','Various Publishers', TRUE, 'LSP14', NULL),
 	
 	('SP1403','Note Neen Dream',
-	 'A dreamy pastel notebook that sparks imagination and positivity. Compact and stylish—your perfect creative companion.',
+	 'A dreamy pastel notebook that sparks imagination and positivity. Compact and stylishâ€”your perfect creative companion.',
 	 '/uploads/Note/Note3.jpg',
 	 'Various Brands','Various Publishers', TRUE, 'LSP14', NULL),
 	
@@ -1344,23 +1354,23 @@ VALUES
 
 -- LSP15 Watch
 	('SP1501','CASIO AE-1500WHC-1AV',
-	 'Large easy-to-read digital display with 10-year battery life, 100 m water resistance, LED light, stopwatch, timer, and daily alarms — black resin band/bezel.',
+	 'Large easy-to-read digital display with 10-year battery life, 100 m water resistance, LED light, stopwatch, timer, and daily alarms â€” black resin band/bezel.',
 	 '/uploads/Watch/Watch1.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
 	('SP1502','CASIO AE-1500WHC-8AV',
-	 'Same AE-1500 features — oversized screen, 10-year battery, 100 m water resistance, LED light, stopwatch/timer/alarms — in the gray/8AV colorway.',
+	 'Same AE-1500 features â€” oversized screen, 10-year battery, 100 m water resistance, LED light, stopwatch/timer/alarms â€” in the gray/8AV colorway.',
 	 '/uploads/Watch/Watch2.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
-	-- AE-1700H: world time, 10 năm pin
+	-- AE-1700H: world time, 10 nÄƒm pin
 	('SP1503','CASIO AE-1700H-1BV',
-	 'World Time digital with 10-year battery, 100 m water resistance, LED light, 5 alarms, stopwatch, countdown timer, and world map display — 1BV black variant.',
+	 'World Time digital with 10-year battery, 100 m water resistance, LED light, 5 alarms, stopwatch, countdown timer, and world map display â€” 1BV black variant.',
 	 '/uploads/Watch/Watch3.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
 	('SP1504','CASIO AE-1700H-1AV',
-	 'AE-1700 series: World Time, 10-year battery, 100 m water resistance, LED light, 5 alarms, stopwatch and timer — classic 1AV black finish.',
+	 'AE-1700 series: World Time, 10-year battery, 100 m water resistance, LED light, 5 alarms, stopwatch and timer â€” classic 1AV black finish.',
 	 '/uploads/Watch/Watch4.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
@@ -1369,7 +1379,7 @@ VALUES
 	 '/uploads/Watch/Watch5.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
-	-- AQ-230EM: retro ana-digi, dây thép
+	-- AQ-230EM: retro ana-digi, dÃ¢y thÃ©p
 	('SP1506','CASIO AQ-230EM-7A',
 	 'Retro ana-digi with minimalist silver dial, stainless-steel mesh band, dual time, daily alarm, stopwatch, auto calendar, and 30 m water resistance.',
 	 '/uploads/Watch/Watch6.jpg',
@@ -1380,9 +1390,9 @@ VALUES
 	 '/uploads/Watch/Watch7.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
-	-- A158WEM: vintage digital, dây lưới thép
+	-- A158WEM: vintage digital, dÃ¢y lÆ°á»›i thÃ©p
 	('SP1508','CASIO A158WEM-7',
-	 'Iconic vintage digital with stainless-steel mesh band, LED light, stopwatch, daily alarm, auto calendar, and water resistance — silver dial (-7).',
+	 'Iconic vintage digital with stainless-steel mesh band, LED light, stopwatch, daily alarm, auto calendar, and water resistance â€” silver dial (-7).',
 	 '/uploads/Watch/Watch8.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
@@ -1391,15 +1401,15 @@ VALUES
 	 '/uploads/Watch/Watch9.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
-	-- MWD-100HD: digital 100m WR, dây thép
+	-- MWD-100HD: digital 100m WR, dÃ¢y thÃ©p
 	('SP1510','CASIO MWD-100HD-1BV',
 	 'Rugged digital with stainless-steel band, 100 m water resistance, oversized LCD, LED light, 5 alarms, stopwatch, countdown timer, and full auto calendar.',
 	 '/uploads/Watch/Watch10.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 	
-	-- AQ-240E: mỏng, chữ nhật, ana-digi
+	-- AQ-240E: má»ng, chá»¯ nháº­t, ana-digi
 	('SP1511','CASIO AQ-240E-3A',
-	 'Slim rectangular ana-digi with green dial accents, dual time, daily alarm, hourly signal, stopwatch, and 30 m water resistance — elegant retro styling.',
+	 'Slim rectangular ana-digi with green dial accents, dual time, daily alarm, hourly signal, stopwatch, and 30 m water resistance â€” elegant retro styling.',
 	 '/uploads/Watch/Watch11.jpg',
 	 'Casio','Casio', TRUE, 'LSP15', NULL),
 
@@ -1430,23 +1440,23 @@ VALUES
 	 '/uploads/Pen/Pen5.jpg',
 	 'Parker','Parker', TRUE, 'LSP16', NULL),
 	
-	('SP1606','Allan D’lious 0502RR Rollerball Pen',
-	 'A stylish Allan D’lious rollerball pen featuring a balanced body and smooth ink delivery—perfect for business professionals and daily note-taking.',
+	('SP1606','Allan Dâ€™lious 0502RR Rollerball Pen',
+	 'A stylish Allan Dâ€™lious rollerball pen featuring a balanced body and smooth ink deliveryâ€”perfect for business professionals and daily note-taking.',
 	 '/uploads/Pen/Pen6.jpg',
-	 'Allan D’lious','Allan D’lious', TRUE, 'LSP16', NULL),
+	 'Allan Dâ€™lious','Allan Dâ€™lious', TRUE, 'LSP16', NULL),
 	
 	('SP1607','Lamy Al-Star Pacific Special Edition 2017 Fountain Pen',
 	 'A limited-edition fountain pen in a vibrant Pacific blue aluminum finish. Lightweight, durable, and designed for smooth, expressive writing.',
 	 '/uploads/Pen/Pen7.jpg',
 	 'Lamy','Lamy', TRUE, 'LSP16', NULL),
 	
-	('SP1608','Allan D’lious AG0302BBK Gold-Plated Ballpoint Pen',
+	('SP1608','Allan Dâ€™lious AG0302BBK Gold-Plated Ballpoint Pen',
 	 'An elegant gold-plated ballpoint pen with premium finish and durable twist mechanism. Combines luxury and everyday practicality.',
 	 '/uploads/Pen/Pen8.jpg',
-	 'Allan D’lious','Allan D’lious', TRUE, 'LSP16', NULL),
+	 'Allan Dâ€™lious','Allan Dâ€™lious', TRUE, 'LSP16', NULL),
 	
-	('SP1609','Montblanc Meisterstück UNICEF Solitaire LeGrand Rollerball MB116084',
-	 'A luxurious Montblanc Meisterstück LeGrand rollerball pen created in support of UNICEF. Crafted with exquisite detailing and timeless sophistication.',
+	('SP1609','Montblanc MeisterstÃ¼ck UNICEF Solitaire LeGrand Rollerball MB116084',
+	 'A luxurious Montblanc MeisterstÃ¼ck LeGrand rollerball pen created in support of UNICEF. Crafted with exquisite detailing and timeless sophistication.',
 	 '/uploads/Pen/Pen9.jpg',
 	 'Montblanc','Montblanc', TRUE, 'LSP16', NULL),
 	
@@ -1456,7 +1466,7 @@ VALUES
 	 'Parker','Parker', TRUE, 'LSP16', NULL),
 	
 	('SP1611','Parker JOT SS GT FP M BLU GB 2030948 Fountain Pen',
-	 'Parker Jotter Stainless Steel Gold Trim fountain pen, medium nib. Smooth ink flow, reliable snap cap, and gift box—everyday elegance.',
+	 'Parker Jotter Stainless Steel Gold Trim fountain pen, medium nib. Smooth ink flow, reliable snap cap, and gift boxâ€”everyday elegance.',
 	 '/uploads/Pen/Pen11.jpg',
 	 'Parker','Parker', TRUE, 'LSP16', NULL),
 	
@@ -1465,7 +1475,7 @@ VALUES
 	 '/uploads/Pen/Pen12.jpg',
 	 'Parker','Parker', TRUE, 'LSP16', NULL),
 	
-	('SP1613','Parker IM SE GB4 Ballpoint Pen – 2074161',
+	('SP1613','Parker IM SE GB4 Ballpoint Pen â€“ 2074161',
 	 'Parker IM Special Edition ballpoint with balanced weight and refined finish. Consistent, clean lines for daily writing and gifting.',
 	 '/uploads/Pen/Pen13.jpg',
 	 'Parker','Parker', TRUE, 'LSP16', NULL),
@@ -1513,32 +1523,32 @@ VALUES
 	 '/uploads/Draw/Draw4.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1705','Thien Long Colokit ART MARKER AM-C001 – 24-color markers',
+	('SP1705','Thien Long Colokit ART MARKER AM-C001 â€“ 24-color markers',
 	 'Set of 24 vivid markers that dry quickly and resist smudging. Suited for illustration, posters, and decorative note-taking.',
 	 '/uploads/Draw/Draw5.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1706','Colokit Doraemon TCR-C04/DO – 12-color twisting wax pen',
-	 '12 twistable wax crayons—no sharpening needed. Smooth strokes, low mess, great for kids’ coloring and school projects.',
+	('SP1706','Colokit Doraemon TCR-C04/DO â€“ 12-color twisting wax pen',
+	 '12 twistable wax crayonsâ€”no sharpening needed. Smooth strokes, low mess, great for kidsâ€™ coloring and school projects.',
 	 '/uploads/Draw/Draw6.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1707','Thien Long Colokit TCR-C007/DO – 12-color twisted wax pen',
+	('SP1707','Thien Long Colokit TCR-C007/DO â€“ 12-color twisted wax pen',
 	 '12 twist wax pens with sturdy barrels and even color laydown. Works well on drawing paper, notebooks, and craft items.',
 	 '/uploads/Draw/Draw7.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1708','Colokit Doraemon TCR-C05/DO – 18-color twisting wax pen',
+	('SP1708','Colokit Doraemon TCR-C05/DO â€“ 18-color twisting wax pen',
 	 '18 rich twistable crayons offering wide color variety for bold, playful artwork and classroom activities.',
 	 '/uploads/Draw/Draw8.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1709','DIY Wooden Painting Set – Thien Long Transport Colokit KIT-C032',
-	 'DIY wooden painting kit themed around vehicles. Includes pre-cut wooden pieces and paints—fun for learning and creativity.',
+	('SP1709','DIY Wooden Painting Set â€“ Thien Long Transport Colokit KIT-C032',
+	 'DIY wooden painting kit themed around vehicles. Includes pre-cut wooden pieces and paintsâ€”fun for learning and creativity.',
 	 '/uploads/Draw/Draw9.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
 	
-	('SP1710','Thien Long Colokit TCR-C008/DO – 18-color twisted wax pen',
+	('SP1710','Thien Long Colokit TCR-C008/DO â€“ 18-color twisted wax pen',
 	 '18 twist wax pens with smooth, consistent color. Handy, clean, and ideal for everyday coloring and craft projects.',
 	 '/uploads/Draw/Draw10.jpg',
 	 'Colokit','Thien Long Group', TRUE, 'LSP17', NULL),
@@ -1561,12 +1571,12 @@ VALUES
 	 '/uploads/Studentbook/Studentbook3.jpg',
 	 'Various Brands','Various Publishers', TRUE, 'LSP18', NULL),
 	
-	('SP1804','Sao Mai “Keep Calm” Lined Notebook',
-	 'A motivational “Keep Calm” notebook from Sao Mai with soft pages and a modern design—ideal for school or personal planning.',
+	('SP1804','Sao Mai â€œKeep Calmâ€ Lined Notebook',
+	 'A motivational â€œKeep Calmâ€ notebook from Sao Mai with soft pages and a modern designâ€”ideal for school or personal planning.',
 	 '/uploads/Studentbook/Studentbook4.jpg',
 	 'Sao Mai','Sao Mai', TRUE, 'LSP18', NULL),
 	
-	('SP1805','Sao Mai “Emotion” Lined Notebook',
+	('SP1805','Sao Mai â€œEmotionâ€ Lined Notebook',
 	 'A Sao Mai Emotion notebook with expressive cover art. Perfect for capturing your thoughts, lessons, and creative ideas.',
 	 '/uploads/Studentbook/Studentbook5.jpg',
 	 'Sao Mai','Sao Mai', TRUE, 'LSP18', NULL),
@@ -1581,7 +1591,7 @@ VALUES
 	 '/uploads/Studentbook/Studentbook7.jpg',
 	 'Various Brands','Various Publishers', TRUE, 'LSP18', NULL),
 	
-	('SP1808','Pupil “New Wave” Lined Notebook',
+	('SP1808','Pupil â€œNew Waveâ€ Lined Notebook',
 	 'A modern-style notebook from Pupil with a vibrant New Wave cover. Combines trendy design with quality paper for everyday use.',
 	 '/uploads/Studentbook/Studentbook8.jpg',
 	 'Pupil','Pupil', TRUE, 'LSP18', NULL),
@@ -1600,12 +1610,12 @@ VALUES
 
 -- LSP19 CompaEke
 	('SP1901','Hong Ha compass (3215), student compass, pencil compass, iron compass, cute compass',
-	 'Durable, precise school compass with smooth adjustment wheel and firm needle grip—great for accurate circles in class or technical drawing.',
+	 'Durable, precise school compass with smooth adjustment wheel and firm needle gripâ€”great for accurate circles in class or technical drawing.',
 	 '/uploads/CompaEke/CompaEke1.jpg',
 	 'Hong Ha','Hong Ha', TRUE, 'LSP19', NULL),
 	
 	('SP1902','Compa Thien Long C-015',
-	 'Modern compass with built-in mechanical pencil and fine hinge control—ideal for neat, precise geometry work.',
+	 'Modern compass with built-in mechanical pencil and fine hinge controlâ€”ideal for neat, precise geometry work.',
 	 '/uploads/CompaEke/CompaEke2.jpg',
 	 'Thien Long','Thien Long', TRUE, 'LSP19', NULL),
 	
@@ -1614,8 +1624,8 @@ VALUES
 	 '/uploads/CompaEke/CompaEke3.jpg',
 	 'Thien Long','Thien Long', TRUE, 'LSP19', NULL),
 	
-	('SP1904','Eke Set – 4 Pieces',
-	 'Complete geometry kit: 30°/60° and 45° set squares, 20 cm ruler, and 180° protractor. Clear acrylic with easy-to-read mm scale.',
+	('SP1904','Eke Set â€“ 4 Pieces',
+	 'Complete geometry kit: 30Â°/60Â° and 45Â° set squares, 20 cm ruler, and 180Â° protractor. Clear acrylic with easy-to-read mm scale.',
 	 '/uploads/CompaEke/CompaEke4.jpg',
 	 'Eke','Eke', TRUE, 'LSP19', NULL),
 	
@@ -1630,7 +1640,7 @@ VALUES
 	 'Thien Long','Thien Long', TRUE, 'LSP19', NULL),
 	
 	('SP1907','Point 10 MTEN compass set TP-C019',
-	 'Pastel compass set in a compact case—includes spare leads and accessories. Cute look, dependable precision.',
+	 'Pastel compass set in a compact caseâ€”includes spare leads and accessories. Cute look, dependable precision.',
 	 '/uploads/CompaEke/CompaEke7.jpg',
 	 'MTEN (Point 10)','MTEN (Point 10)', TRUE, 'LSP19', NULL),
 	
@@ -1640,7 +1650,7 @@ VALUES
 	 'Thien Long','Thien Long', TRUE, 'LSP19', NULL),
 	
 	('SP1909','Compa MTEN Point 10 TP-C012 TSTT4 Elsa',
-	 'Kid-friendly themed compass with protected needle, smooth hinge, and snug case—fun design that still draws precise circles.',
+	 'Kid-friendly themed compass with protected needle, smooth hinge, and snug caseâ€”fun design that still draws precise circles.',
 	 '/uploads/CompaEke/CompaEke9.jpg',
 	 'MTEN (Point 10)','MTEN (Point 10)', TRUE, 'LSP19', NULL),
 	
@@ -1651,7 +1661,7 @@ VALUES
 
 -- LSP20 PencilEraser
 	('SP2001','Clear Rotation PLUS Pokemon - Dimensions 66 x 21 x 13 mm',
-	 'Compact PLUS Pokémon-themed eraser in a clear rotating sleeve. Clean erasing with low residue; pocket-friendly size 66×21×13 mm.',
+	 'Compact PLUS PokÃ©mon-themed eraser in a clear rotating sleeve. Clean erasing with low residue; pocket-friendly size 66Ã—21Ã—13 mm.',
 	 '/uploads/PencilEraser/PencilEraser1.jpg',
 	 'PLUS','PLUS', TRUE, 'LSP20', NULL),
 	
@@ -1661,7 +1671,7 @@ VALUES
 	 'STAEDTLER','STAEDTLER', TRUE, 'LSP20', NULL),
 	
 	('SP2003','Thien Long car lead eraser TP-E020/CA',
-	 'Novelty car-shaped eraser by Thien Long. Soft formula erases cleanly—fun and safe for school use.',
+	 'Novelty car-shaped eraser by Thien Long. Soft formula erases cleanlyâ€”fun and safe for school use.',
 	 '/uploads/PencilEraser/PencilEraser3.jpg',
 	 'Thien Long','Thien Long', TRUE, 'LSP20', NULL),
 	
@@ -1686,17 +1696,17 @@ VALUES
 	 'Pentel','Pentel', TRUE, 'LSP20', NULL),
 	
 	('SP2008','Genuine Plus pencil eraser, small black Pokemon and Pikachu tablets',
-	 'Official PLUS small black Pokémon/Pikachu eraser. Neat erasing in a compact, collectible block.',
+	 'Official PLUS small black PokÃ©mon/Pikachu eraser. Neat erasing in a compact, collectible block.',
 	 '/uploads/PencilEraser/PencilEraser8.jpg',
 	 'PLUS','PLUS', TRUE, 'LSP20', NULL),
 	
 	('SP2009','Staedtler 526 35B black pencil eraser',
-	 'STAEDTLER 526 35B black eraser—dust-reduced, smear-resistant, and suitable for everyday writing or sketching.',
+	 'STAEDTLER 526 35B black eraserâ€”dust-reduced, smear-resistant, and suitable for everyday writing or sketching.',
 	 '/uploads/PencilEraser/PencilEraser9.jpg',
 	 'STAEDTLER','STAEDTLER', TRUE, 'LSP20', NULL),
 	
 	('SP2010','Genuine Plus pencil eraser, Pokemon and Pikachu yellow tablets',
-	 'Official PLUS small yellow Pokémon/Pikachu eraser block. Soft, clean erase with a playful theme.',
+	 'Official PLUS small yellow PokÃ©mon/Pikachu eraser block. Soft, clean erase with a playful theme.',
 	 '/uploads/PencilEraser/PencilEraser10.jpg',
 	 'PLUS','PLUS', TRUE, 'LSP20', NULL);
 
@@ -1705,7 +1715,7 @@ VALUES
 -- INITIAL IMPORT INVOICE
 -- =========================
 INSERT INTO import_invoice (import_invoice_code, discount, total_amount, description, employee_code, supplier_code, status)
-VALUES ('PN01', 0, 2500000, 'Phiếu nhập lần đầu toàn bộ sách', 'NV_KETOAN', 'NCC01', 'APPROVED');
+VALUES ('PN01', 0, 2500000, 'Phiáº¿u nháº­p láº§n Ä‘áº§u toÃ n bá»™ sÃ¡ch', 'NV_KETOAN', 'NCC01', 'APPROVED');
 
 
 -- =========================
@@ -2789,5 +2799,677 @@ INSERT INTO price_history (price_history_code, unit_price, product_code, import_
 ('LSG307A',42000,'SP2008','PN01','CTPN307',TRUE),
 ('LSG308A',29000,'SP2009','PN01','CTPN308',TRUE),
 ('LSG309A',45000,'SP2010','PN01','CTPN309',TRUE);
+
+-- =========================
+-- SUPPLIER PRODUCT MAPPING 
+-- =========================
+-- Mapping nhÃ  cung cáº¥p vá»›i sáº£n pháº©m vÃ  giÃ¡ nháº­p tÆ°Æ¡ng á»©ng
+
+INSERT IGNORE INTO supplier_product (supplier_product_code, supplier_code, product_code, import_price, status) VALUES
+
+-- =========================
+-- NCC01 - NXB Tá»•ng Há»£p HÃ  Ná»™i: ChuyÃªn sÃ¡ch vÄƒn há»c, tiá»ƒu thuyáº¿t
+-- =========================
+-- LSP01 Romance (SP0101-SP0110) - GiÃ¡ nháº­p 40k-50k
+('NCCSP_NCC01_SP0101','NCC01','SP0101',42000,TRUE),
+('NCCSP_NCC01_SP0102','NCC01','SP0102',45000,TRUE),
+('NCCSP_NCC01_SP0103','NCC01','SP0103',38000,TRUE),
+('NCCSP_NCC01_SP0104','NCC01','SP0104',41000,TRUE),
+('NCCSP_NCC01_SP0105','NCC01','SP0105',44000,TRUE),
+('NCCSP_NCC01_SP0106','NCC01','SP0106',47000,TRUE),
+('NCCSP_NCC01_SP0107','NCC01','SP0107',49000,TRUE),
+('NCCSP_NCC01_SP0108','NCC01','SP0108',43000,TRUE),
+('NCCSP_NCC01_SP0109','NCC01','SP0109',40000,TRUE),
+('NCCSP_NCC01_SP0110','NCC01','SP0110',50000,TRUE),
+
+-- LSP02 Horror (SP0201-SP0240) - GiÃ¡ nháº­p 45k-55k  
+('NCCSP_NCC01_SP0201','NCC01','SP0201',48000,TRUE),
+('NCCSP_NCC01_SP0202','NCC01','SP0202',52000,TRUE),
+('NCCSP_NCC01_SP0203','NCC01','SP0203',49000,TRUE),
+('NCCSP_NCC01_SP0204','NCC01','SP0204',54000,TRUE),
+('NCCSP_NCC01_SP0205','NCC01','SP0205',51000,TRUE),
+('NCCSP_NCC01_SP0206','NCC01','SP0206',47000,TRUE),
+('NCCSP_NCC01_SP0207','NCC01','SP0207',55000,TRUE),
+('NCCSP_NCC01_SP0208','NCC01','SP0208',50000,TRUE),
+('NCCSP_NCC01_SP0209','NCC01','SP0209',46000,TRUE),
+('NCCSP_NCC01_SP0210','NCC01','SP0210',53000,TRUE),
+
+-- LSP06 Biography (SP0601-SP0620) - GiÃ¡ nháº­p 50k-60k
+('NCCSP_NCC01_SP0601','NCC01','SP0601',55000,TRUE),
+('NCCSP_NCC01_SP0602','NCC01','SP0602',58000,TRUE),
+('NCCSP_NCC01_SP0603','NCC01','SP0603',52000,TRUE),
+('NCCSP_NCC01_SP0604','NCC01','SP0604',59000,TRUE),
+('NCCSP_NCC01_SP0605','NCC01','SP0605',54000,TRUE),
+('NCCSP_NCC01_SP0606','NCC01','SP0606',56000,TRUE),
+('NCCSP_NCC01_SP0607','NCC01','SP0607',60000,TRUE),
+('NCCSP_NCC01_SP0608','NCC01','SP0608',53000,TRUE),
+('NCCSP_NCC01_SP0609','NCC01','SP0609',57000,TRUE),
+('NCCSP_NCC01_SP0610','NCC01','SP0610',61000,TRUE),
+
+-- =========================
+-- NCC02 - NXB Kim Äá»“ng: ChuyÃªn sÃ¡ch thiáº¿u nhi, giÃ¡o dá»¥c
+-- =========================
+-- LSP08 Poetry (SP0801-SP0820) - GiÃ¡ nháº­p 35k-45k
+('NCCSP_NCC02_SP0801','NCC02','SP0801',38000,TRUE),
+('NCCSP_NCC02_SP0802','NCC02','SP0802',42000,TRUE),
+('NCCSP_NCC02_SP0803','NCC02','SP0803',39000,TRUE),
+('NCCSP_NCC02_SP0804','NCC02','SP0804',44000,TRUE),
+('NCCSP_NCC02_SP0805','NCC02','SP0805',37000,TRUE),
+('NCCSP_NCC02_SP0806','NCC02','SP0806',41000,TRUE),
+('NCCSP_NCC02_SP0807','NCC02','SP0807',43000,TRUE),
+('NCCSP_NCC02_SP0808','NCC02','SP0808',40000,TRUE),
+('NCCSP_NCC02_SP0809','NCC02','SP0809',36000,TRUE),
+('NCCSP_NCC02_SP0810','NCC02','SP0810',45000,TRUE),
+
+-- LSP07 Cook (SP0701-SP0720) - GiÃ¡ nháº­p 40k-50k
+('NCCSP_NCC02_SP0701','NCC02','SP0701',43000,TRUE),
+('NCCSP_NCC02_SP0702','NCC02','SP0702',47000,TRUE),
+('NCCSP_NCC02_SP0703','NCC02','SP0703',41000,TRUE),
+('NCCSP_NCC02_SP0704','NCC02','SP0704',45000,TRUE),
+('NCCSP_NCC02_SP0705','NCC02','SP0705',49000,TRUE),
+('NCCSP_NCC02_SP0706','NCC02','SP0706',44000,TRUE),
+('NCCSP_NCC02_SP0707','NCC02','SP0707',50000,TRUE),
+('NCCSP_NCC02_SP0708','NCC02','SP0708',42000,TRUE),
+('NCCSP_NCC02_SP0709','NCC02','SP0709',46000,TRUE),
+('NCCSP_NCC02_SP0710','NCC02','SP0710',48000,TRUE),
+
+-- =========================
+-- NCC03 - CÃ´ng Ty Fahasa: Äa dáº¡ng cÃ¡c loáº¡i sÃ¡ch
+-- =========================
+-- LSP03 Fantasy (SP0301-SP0320) - GiÃ¡ nháº­p 48k-58k
+('NCCSP_NCC03_SP0301','NCC03','SP0301',51000,TRUE),
+('NCCSP_NCC03_SP0302','NCC03','SP0302',56000,TRUE),
+('NCCSP_NCC03_SP0303','NCC03','SP0303',52000,TRUE),
+('NCCSP_NCC03_SP0304','NCC03','SP0304',55000,TRUE),
+('NCCSP_NCC03_SP0305','NCC03','SP0305',53000,TRUE),
+('NCCSP_NCC03_SP0306','NCC03','SP0306',57000,TRUE),
+('NCCSP_NCC03_SP0307','NCC03','SP0307',54000,TRUE),
+('NCCSP_NCC03_SP0308','NCC03','SP0308',50000,TRUE),
+('NCCSP_NCC03_SP0309','NCC03','SP0309',58000,TRUE),
+('NCCSP_NCC03_SP0310','NCC03','SP0310',56000,TRUE),
+
+-- LSP04 Business (SP0401-SP0420) - GiÃ¡ nháº­p 55k-65k
+('NCCSP_NCC03_SP0401','NCC03','SP0401',59000,TRUE),
+('NCCSP_NCC03_SP0402','NCC03','SP0402',62000,TRUE),
+('NCCSP_NCC03_SP0403','NCC03','SP0403',57000,TRUE),
+('NCCSP_NCC03_SP0404','NCC03','SP0404',65000,TRUE),
+('NCCSP_NCC03_SP0405','NCC03','SP0405',60000,TRUE),
+('NCCSP_NCC03_SP0406','NCC03','SP0406',56000,TRUE),
+('NCCSP_NCC03_SP0407','NCC03','SP0407',63000,TRUE),
+('NCCSP_NCC03_SP0408','NCC03','SP0408',58000,TRUE),
+('NCCSP_NCC03_SP0409','NCC03','SP0409',55000,TRUE),
+('NCCSP_NCC03_SP0410','NCC03','SP0410',61000,TRUE),
+
+-- LSP05 Drama (SP0501-SP0520) - GiÃ¡ nháº­p 45k-55k
+('NCCSP_NCC03_SP0501','NCC03','SP0501',48000,TRUE),
+('NCCSP_NCC03_SP0502','NCC03','SP0502',52000,TRUE),
+('NCCSP_NCC03_SP0503','NCC03','SP0503',46000,TRUE),
+('NCCSP_NCC03_SP0504','NCC03','SP0504',54000,TRUE),
+('NCCSP_NCC03_SP0505','NCC03','SP0505',50000,TRUE),
+('NCCSP_NCC03_SP0506','NCC03','SP0506',55000,TRUE),
+('NCCSP_NCC03_SP0507','NCC03','SP0507',51000,TRUE),
+('NCCSP_NCC03_SP0508','NCC03','SP0508',47000,TRUE),
+('NCCSP_NCC03_SP0509','NCC03','SP0509',53000,TRUE),
+('NCCSP_NCC03_SP0510','NCC03','SP0510',56000,TRUE),
+
+-- =========================
+-- NCC04 - CÃ´ng Ty PhÃ¢n Phá»‘i ThiÃªn Long: ChuyÃªn vÄƒn phÃ²ng pháº©m
+-- =========================
+-- LSP16 Pen (SP1601-SP1617) - GiÃ¡ nháº­p 250k-400k
+('NCCSP_NCC04_SP1601','NCC04','SP1601',285000,TRUE),
+('NCCSP_NCC04_SP1602','NCC04','SP1602',365000,TRUE),
+('NCCSP_NCC04_SP1603','NCC04','SP1603',295000,TRUE),
+('NCCSP_NCC04_SP1604','NCC04','SP1604',320000,TRUE),
+('NCCSP_NCC04_SP1605','NCC04','SP1605',275000,TRUE),
+('NCCSP_NCC04_SP1606','NCC04','SP1606',245000,TRUE),
+('NCCSP_NCC04_SP1607','NCC04','SP1607',280000,TRUE),
+('NCCSP_NCC04_SP1608','NCC04','SP1608',260000,TRUE),
+('NCCSP_NCC04_SP1609','NCC04','SP1609',390000,TRUE),
+('NCCSP_NCC04_SP1610','NCC04','SP1610',270000,TRUE),
+
+-- LSP20 PencilEraser (SP2001-SP2010) - GiÃ¡ nháº­p 15k-25k
+('NCCSP_NCC04_SP2001','NCC04','SP2001',18000,TRUE),
+('NCCSP_NCC04_SP2002','NCC04','SP2002',15000,TRUE),
+('NCCSP_NCC04_SP2003','NCC04','SP2003',17000,TRUE),
+('NCCSP_NCC04_SP2004','NCC04','SP2004',16000,TRUE),
+('NCCSP_NCC04_SP2005','NCC04','SP2005',20000,TRUE),
+('NCCSP_NCC04_SP2006','NCC04','SP2006',17500,TRUE),
+('NCCSP_NCC04_SP2007','NCC04','SP2007',19000,TRUE),
+('NCCSP_NCC04_SP2008','NCC04','SP2008',22000,TRUE),
+('NCCSP_NCC04_SP2009','NCC04','SP2009',15500,TRUE),
+('NCCSP_NCC04_SP2010','NCC04','SP2010',24000,TRUE),
+
+-- LSP19 CompaEke (SP1901-SP1910) - GiÃ¡ nháº­p 20k-30k
+('NCCSP_NCC04_SP1901','NCC04','SP1901',23000,TRUE),
+('NCCSP_NCC04_SP1902','NCC04','SP1902',26000,TRUE),
+('NCCSP_NCC04_SP1903','NCC04','SP1903',24000,TRUE),
+('NCCSP_NCC04_SP1904','NCC04','SP1904',30000,TRUE),
+('NCCSP_NCC04_SP1905','NCC04','SP1905',21000,TRUE),
+('NCCSP_NCC04_SP1906','NCC04','SP1906',28000,TRUE),
+('NCCSP_NCC04_SP1907','NCC04','SP1907',29000,TRUE),
+('NCCSP_NCC04_SP1908','NCC04','SP1908',25000,TRUE),
+('NCCSP_NCC04_SP1909','NCC04','SP1909',23500,TRUE),
+('NCCSP_NCC04_SP1910','NCC04','SP1910',22000,TRUE),
+
+-- =========================
+-- NCC05 - NhÃ  SÃ¡ch PhÆ°Æ¡ng Nam: SÃ¡ch giÃ¡o dá»¥c vÃ  há»c thuáº­t
+-- =========================
+-- LSP09 Art (SP0901-SP0917) - GiÃ¡ nháº­p 45k-55k
+('NCCSP_NCC05_SP0901','NCC05','SP0901',48000,TRUE),
+('NCCSP_NCC05_SP0902','NCC05','SP0902',52000,TRUE),
+('NCCSP_NCC05_SP0903','NCC05','SP0903',46000,TRUE),
+('NCCSP_NCC05_SP0904','NCC05','SP0904',54000,TRUE),
+('NCCSP_NCC05_SP0905','NCC05','SP0905',50000,TRUE),
+('NCCSP_NCC05_SP0906','NCC05','SP0906',49000,TRUE),
+('NCCSP_NCC05_SP0907','NCC05','SP0907',53000,TRUE),
+('NCCSP_NCC05_SP0908','NCC05','SP0908',47000,TRUE),
+('NCCSP_NCC05_SP0909','NCC05','SP0909',51000,TRUE),
+('NCCSP_NCC05_SP0910','NCC05','SP0910',55000,TRUE),
+
+-- LSP10 Architecture (SP1001-SP1020) - GiÃ¡ nháº­p 50k-65k
+('NCCSP_NCC05_SP1001','NCC05','SP1001',54000,TRUE),
+('NCCSP_NCC05_SP1002','NCC05','SP1002',58000,TRUE),
+('NCCSP_NCC05_SP1003','NCC05','SP1003',52000,TRUE),
+('NCCSP_NCC05_SP1004','NCC05','SP1004',61000,TRUE),
+('NCCSP_NCC05_SP1005','NCC05','SP1005',56000,TRUE),
+('NCCSP_NCC05_SP1006','NCC05','SP1006',59000,TRUE),
+('NCCSP_NCC05_SP1007','NCC05','SP1007',63000,TRUE),
+('NCCSP_NCC05_SP1008','NCC05','SP1008',55000,TRUE),
+('NCCSP_NCC05_SP1009','NCC05','SP1009',57000,TRUE),
+('NCCSP_NCC05_SP1010','NCC05','SP1010',65000,TRUE),
+
+-- =========================
+-- NCC06 - CÃ´ng Ty VÄƒn PhÃ²ng Pháº©m Há»“ng HÃ : VÄƒn phÃ²ng pháº©m vÃ  dá»¥ng cá»¥ há»c táº­p
+-- =========================
+-- LSP14 Note (SP1401-SP1410) - GiÃ¡ nháº­p 20k-35k
+('NCCSP_NCC06_SP1401','NCC06','SP1401',24000,TRUE),
+('NCCSP_NCC06_SP1402','NCC06','SP1402',21000,TRUE),
+('NCCSP_NCC06_SP1403','NCC06','SP1403',27000,TRUE),
+('NCCSP_NCC06_SP1404','NCC06','SP1404',23000,TRUE),
+('NCCSP_NCC06_SP1405','NCC06','SP1405',20000,TRUE),
+('NCCSP_NCC06_SP1406','NCC06','SP1406',29000,TRUE),
+('NCCSP_NCC06_SP1407','NCC06','SP1407',25000,TRUE),
+('NCCSP_NCC06_SP1408','NCC06','SP1408',22000,TRUE),
+('NCCSP_NCC06_SP1409','NCC06','SP1409',31000,TRUE),
+('NCCSP_NCC06_SP1410','NCC06','SP1410',33000,TRUE),
+
+-- LSP17 Draw (SP1701-SP1710) - GiÃ¡ nháº­p 30k-45k
+('NCCSP_NCC06_SP1701','NCC06','SP1701',34000,TRUE),
+('NCCSP_NCC06_SP1702','NCC06','SP1702',41000,TRUE),
+('NCCSP_NCC06_SP1703','NCC06','SP1703',37000,TRUE),
+('NCCSP_NCC06_SP1704','NCC06','SP1704',32000,TRUE),
+('NCCSP_NCC06_SP1705','NCC06','SP1705',43000,TRUE),
+('NCCSP_NCC06_SP1706','NCC06','SP1706',30000,TRUE),
+('NCCSP_NCC06_SP1707','NCC06','SP1707',33000,TRUE),
+('NCCSP_NCC06_SP1708','NCC06','SP1708',40000,TRUE),
+('NCCSP_NCC06_SP1709','NCC06','SP1709',45000,TRUE),
+('NCCSP_NCC06_SP1710','NCC06','SP1710',36000,TRUE),
+
+-- LSP18 Studentbook (SP1801-SP1810) - GiÃ¡ nháº­p 25k-35k
+('NCCSP_NCC06_SP1801','NCC06','SP1801',28000,TRUE),
+('NCCSP_NCC06_SP1802','NCC06','SP1802',26000,TRUE),
+('NCCSP_NCC06_SP1803','NCC06','SP1803',30000,TRUE),
+('NCCSP_NCC06_SP1804','NCC06','SP1804',32000,TRUE),
+('NCCSP_NCC06_SP1805','NCC06','SP1805',27000,TRUE),
+('NCCSP_NCC06_SP1806','NCC06','SP1806',25000,TRUE),
+('NCCSP_NCC06_SP1807','NCC06','SP1807',34000,TRUE),
+('NCCSP_NCC06_SP1808','NCC06','SP1808',29000,TRUE),
+('NCCSP_NCC06_SP1809','NCC06','SP1809',26500,TRUE),
+('NCCSP_NCC06_SP1810','NCC06','SP1810',35000,TRUE),
+
+-- =========================
+-- NCC07 - CÃ´ng Ty ADC Book: SÃ¡ch nÆ°á»›c ngoÃ i vÃ  Ä‘áº·c biá»‡t
+-- =========================
+-- LSP11 Modelkit (SP1101-SP1108) - GiÃ¡ nháº­p 180k-250k
+('NCCSP_NCC07_SP1101','NCC07','SP1101',220000,TRUE),
+('NCCSP_NCC07_SP1102','NCC07','SP1102',195000,TRUE),
+('NCCSP_NCC07_SP1103','NCC07','SP1103',235000,TRUE),
+('NCCSP_NCC07_SP1104','NCC07','SP1104',210000,TRUE),
+('NCCSP_NCC07_SP1105','NCC07','SP1105',245000,TRUE),
+('NCCSP_NCC07_SP1106','NCC07','SP1106',225000,TRUE),
+('NCCSP_NCC07_SP1107','NCC07','SP1107',185000,TRUE),
+('NCCSP_NCC07_SP1108','NCC07','SP1108',250000,TRUE),
+
+-- Má»™t sá»‘ sÃ¡ch Horror bá»• sung (SP0211-SP0220)
+('NCCSP_NCC07_SP0211','NCC07','SP0211',46000,TRUE),
+('NCCSP_NCC07_SP0212','NCC07','SP0212',49000,TRUE),
+('NCCSP_NCC07_SP0213','NCC07','SP0213',51000,TRUE),
+('NCCSP_NCC07_SP0214','NCC07','SP0214',47000,TRUE),
+('NCCSP_NCC07_SP0215','NCC07','SP0215',53000,TRUE),
+
+-- =========================
+-- NCC08 - CÃ´ng Ty Äinh Tá»‹ Books: SÃ¡ch chuyÃªn ngÃ nh
+-- =========================
+-- LSP12 Figure (SP1201-SP1211) - GiÃ¡ nháº­p 150k-200k
+('NCCSP_NCC08_SP1201','NCC08','SP1201',175000,TRUE),
+('NCCSP_NCC08_SP1202','NCC08','SP1202',185000,TRUE),
+('NCCSP_NCC08_SP1203','NCC08','SP1203',165000,TRUE),
+('NCCSP_NCC08_SP1204','NCC08','SP1204',190000,TRUE),
+('NCCSP_NCC08_SP1205','NCC08','SP1205',170000,TRUE),
+('NCCSP_NCC08_SP1206','NCC08','SP1206',195000,TRUE),
+('NCCSP_NCC08_SP1207','NCC08','SP1207',180000,TRUE),
+('NCCSP_NCC08_SP1208','NCC08','SP1208',160000,TRUE),
+('NCCSP_NCC08_SP1209','NCC08','SP1209',200000,TRUE),
+('NCCSP_NCC08_SP1210','NCC08','SP1210',177000,TRUE),
+('NCCSP_NCC08_SP1211','NCC08','SP1211',188000,TRUE),
+
+-- SÃ¡ch Biography bá»• sung (SP0611-SP0620)
+('NCCSP_NCC08_SP0611','NCC08','SP0611',52000,TRUE),
+('NCCSP_NCC08_SP0612','NCC08','SP0612',55000,TRUE),
+('NCCSP_NCC08_SP0613','NCC08','SP0613',58000,TRUE),
+('NCCSP_NCC08_SP0614','NCC08','SP0614',59000,TRUE),
+('NCCSP_NCC08_SP0615','NCC08','SP0615',56000,TRUE),
+
+-- =========================
+-- NCC09 - CÃ´ng Ty AZ Viá»‡t Nam: Äiá»‡n tá»­ vÃ  cÃ´ng nghá»‡
+-- =========================
+-- LSP13 Calculator (SP1301-SP1305) - GiÃ¡ nháº­p 380k-580k
+('NCCSP_NCC09_SP1301','NCC09','SP1301',420000,TRUE),
+('NCCSP_NCC09_SP1302','NCC09','SP1302',465000,TRUE),
+('NCCSP_NCC09_SP1303','NCC09','SP1303',390000,TRUE),
+('NCCSP_NCC09_SP1304','NCC09','SP1304',525000,TRUE),
+('NCCSP_NCC09_SP1305','NCC09','SP1305',580000,TRUE),
+
+-- LSP15 Watch (SP1501-SP1511) - GiÃ¡ nháº­p 480k-650k
+('NCCSP_NCC09_SP1501','NCC09','SP1501',525000,TRUE),
+('NCCSP_NCC09_SP1502','NCC09','SP1502',545000,TRUE),
+('NCCSP_NCC09_SP1503','NCC09','SP1503',580000,TRUE),
+('NCCSP_NCC09_SP1504','NCC09','SP1504',560000,TRUE),
+('NCCSP_NCC09_SP1505','NCC09','SP1505',595000,TRUE),
+('NCCSP_NCC09_SP1506','NCC09','SP1506',485000,TRUE),
+('NCCSP_NCC09_SP1507','NCC09','SP1507',480000,TRUE),
+('NCCSP_NCC09_SP1508','NCC09','SP1508',520000,TRUE),
+('NCCSP_NCC09_SP1509','NCC09','SP1509',500000,TRUE),
+('NCCSP_NCC09_SP1510','NCC09','SP1510',650000,TRUE),
+('NCCSP_NCC09_SP1511','NCC09','SP1511',610000,TRUE),
+
+-- =========================
+-- NCC10 - CÃ´ng Ty SÃ¡ch Alpha Books: SÃ¡ch Ä‘a dáº¡ng
+-- =========================
+-- Bá»• sung cÃ¡c sáº£n pháº©m cÃ²n láº¡i Ä‘á»ƒ Ä‘áº£m báº£o Ä‘áº§y Ä‘á»§
+
+-- LSP01 Romance cÃ²n láº¡i
+-- LSP02 Horror cÃ²n láº¡i (SP0216-SP0240)
+('NCCSP_NCC10_SP0216','NCC10','SP0216',48000,TRUE),
+('NCCSP_NCC10_SP0217','NCC10','SP0217',52000,TRUE),
+('NCCSP_NCC10_SP0218','NCC10','SP0218',49000,TRUE),
+('NCCSP_NCC10_SP0219','NCC10','SP0219',54000,TRUE),
+('NCCSP_NCC10_SP0220','NCC10','SP0220',51000,TRUE),
+('NCCSP_NCC10_SP0221','NCC10','SP0221',47000,TRUE),
+('NCCSP_NCC10_SP0222','NCC10','SP0222',50000,TRUE),
+('NCCSP_NCC10_SP0223','NCC10','SP0223',53000,TRUE),
+('NCCSP_NCC10_SP0224','NCC10','SP0224',48500,TRUE),
+('NCCSP_NCC10_SP0225','NCC10','SP0225',51500,TRUE),
+
+-- LSP03 Fantasy cÃ²n láº¡i (SP0311-SP0320)
+('NCCSP_NCC10_SP0311','NCC10','SP0311',52000,TRUE),
+('NCCSP_NCC10_SP0312','NCC10','SP0312',55000,TRUE),
+('NCCSP_NCC10_SP0313','NCC10','SP0313',53000,TRUE),
+('NCCSP_NCC10_SP0314','NCC10','SP0314',56000,TRUE),
+('NCCSP_NCC10_SP0315','NCC10','SP0315',54000,TRUE),
+('NCCSP_NCC10_SP0316','NCC10','SP0316',57000,TRUE),
+('NCCSP_NCC10_SP0317','NCC10','SP0317',55500,TRUE),
+('NCCSP_NCC10_SP0318','NCC10','SP0318',51500,TRUE),
+('NCCSP_NCC10_SP0319','NCC10','SP0319',58000,TRUE),
+('NCCSP_NCC10_SP0320','NCC10','SP0320',59000,TRUE),
+
+-- LSP04 Business cÃ²n láº¡i (SP0411-SP0420) 
+('NCCSP_NCC10_SP0411','NCC10','SP0411',57000,TRUE),
+('NCCSP_NCC10_SP0412','NCC10','SP0412',60000,TRUE),
+('NCCSP_NCC10_SP0413','NCC10','SP0413',56000,TRUE),
+('NCCSP_NCC10_SP0414','NCC10','SP0414',63000,TRUE),
+('NCCSP_NCC10_SP0415','NCC10','SP0415',59000,TRUE),
+('NCCSP_NCC10_SP0416','NCC10','SP0416',61000,TRUE),
+('NCCSP_NCC10_SP0417','NCC10','SP0417',64000,TRUE),
+('NCCSP_NCC10_SP0418','NCC10','SP0418',58000,TRUE),
+('NCCSP_NCC10_SP0419','NCC10','SP0419',62000,TRUE),
+('NCCSP_NCC10_SP0420','NCC10','SP0420',65000,TRUE),
+
+-- LSP05 Drama cÃ²n láº¡i (SP0511-SP0520)
+('NCCSP_NCC10_SP0511','NCC10','SP0511',49000,TRUE),
+('NCCSP_NCC10_SP0512','NCC10','SP0512',52000,TRUE),
+('NCCSP_NCC10_SP0513','NCC10','SP0513',50000,TRUE),
+('NCCSP_NCC10_SP0514','NCC10','SP0514',55000,TRUE),
+('NCCSP_NCC10_SP0515','NCC10','SP0515',51000,TRUE),
+('NCCSP_NCC10_SP0516','NCC10','SP0516',56000,TRUE),
+('NCCSP_NCC10_SP0517','NCC10','SP0517',52500,TRUE),
+('NCCSP_NCC10_SP0518','NCC10','SP0518',53500,TRUE),
+('NCCSP_NCC10_SP0519','NCC10','SP0519',54000,TRUE),
+('NCCSP_NCC10_SP0520','NCC10','SP0520',57000,TRUE),
+
+-- LSP06 Biography cÃ²n láº¡i (SP0616-SP0620)
+('NCCSP_NCC10_SP0616','NCC10','SP0616',53000,TRUE),
+('NCCSP_NCC10_SP0617','NCC10','SP0617',60000,TRUE),
+('NCCSP_NCC10_SP0618','NCC10','SP0618',56000,TRUE),
+('NCCSP_NCC10_SP0619','NCC10','SP0619',58000,TRUE),
+('NCCSP_NCC10_SP0620','NCC10','SP0620',61000,TRUE),
+
+-- LSP07 Cook cÃ²n láº¡i (SP0711-SP0720)
+('NCCSP_NCC10_SP0711','NCC10','SP0711',44000,TRUE),
+('NCCSP_NCC10_SP0712','NCC10','SP0712',47000,TRUE),
+('NCCSP_NCC10_SP0713','NCC10','SP0713',45000,TRUE),
+('NCCSP_NCC10_SP0714','NCC10','SP0714',49000,TRUE),
+('NCCSP_NCC10_SP0715','NCC10','SP0715',46000,TRUE),
+('NCCSP_NCC10_SP0716','NCC10','SP0716',50000,TRUE),
+('NCCSP_NCC10_SP0717','NCC10','SP0717',48000,TRUE),
+('NCCSP_NCC10_SP0718','NCC10','SP0718',47500,TRUE),
+('NCCSP_NCC10_SP0719','NCC10','SP0719',48500,TRUE),
+('NCCSP_NCC10_SP0720','NCC10','SP0720',51000,TRUE),
+
+-- LSP08 Poetry cÃ²n láº¡i (SP0811-SP0820)
+('NCCSP_NCC10_SP0811','NCC10','SP0811',39000,TRUE),
+('NCCSP_NCC10_SP0812','NCC10','SP0812',42000,TRUE),
+('NCCSP_NCC10_SP0813','NCC10','SP0813',40000,TRUE),
+('NCCSP_NCC10_SP0814','NCC10','SP0814',44000,TRUE),
+('NCCSP_NCC10_SP0815','NCC10','SP0815',41000,TRUE),
+('NCCSP_NCC10_SP0816','NCC10','SP0816',43000,TRUE),
+('NCCSP_NCC10_SP0817','NCC10','SP0817',42500,TRUE),
+('NCCSP_NCC10_SP0818','NCC10','SP0818',41500,TRUE),
+('NCCSP_NCC10_SP0819','NCC10','SP0819',44500,TRUE),
+('NCCSP_NCC10_SP0820','NCC10','SP0820',45000,TRUE),
+
+-- LSP09 Art cÃ²n láº¡i (SP0911-SP0917)
+('NCCSP_NCC10_SP0911','NCC10','SP0911',49500,TRUE),
+('NCCSP_NCC10_SP0912','NCC10','SP0912',52500,TRUE),
+('NCCSP_NCC10_SP0913','NCC10','SP0913',50500,TRUE),
+('NCCSP_NCC10_SP0914','NCC10','SP0914',54500,TRUE),
+('NCCSP_NCC10_SP0915','NCC10','SP0915',51500,TRUE),
+('NCCSP_NCC10_SP0916','NCC10','SP0916',53500,TRUE),
+('NCCSP_NCC10_SP0917','NCC10','SP0917',55500,TRUE),
+
+-- LSP10 Architecture cÃ²n láº¡i (SP1011-SP1020)
+('NCCSP_NCC10_SP1011','NCC10','SP1011',56500,TRUE),
+('NCCSP_NCC10_SP1012','NCC10','SP1012',59500,TRUE),
+('NCCSP_NCC10_SP1013','NCC10','SP1013',57500,TRUE),
+('NCCSP_NCC10_SP1014','NCC10','SP1014',61500,TRUE),
+('NCCSP_NCC10_SP1015','NCC10','SP1015',58500,TRUE),
+('NCCSP_NCC10_SP1016','NCC10','SP1016',62500,TRUE),
+('NCCSP_NCC10_SP1017','NCC10','SP1017',60500,TRUE),
+('NCCSP_NCC10_SP1018','NCC10','SP1018',59000,TRUE),
+('NCCSP_NCC10_SP1019','NCC10','SP1019',63000,TRUE),
+('NCCSP_NCC10_SP1020','NCC10','SP1020',65500,TRUE),
+
+-- LSP16 Pen cÃ²n láº¡i (SP1611-SP1617)
+('NCCSP_NCC10_SP1611','NCC10','SP1611',290000,TRUE),
+('NCCSP_NCC10_SP1612','NCC10','SP1612',255000,TRUE),
+('NCCSP_NCC10_SP1613','NCC10','SP1613',305000,TRUE),
+('NCCSP_NCC10_SP1614','NCC10','SP1614',250000,TRUE),
+('NCCSP_NCC10_SP1615','NCC10','SP1615',330000,TRUE),
+('NCCSP_NCC10_SP1616','NCC10','SP1616',265000,TRUE),
+('NCCSP_NCC10_SP1617','NCC10','SP1617',275000,TRUE),
+
+-- =========================
+-- CROSS-SUPPLIER MAPPINGS (Multiple suppliers for same products)
+-- =========================
+-- Táº¡o sá»± cáº¡nh tranh giá»¯a cÃ¡c nhÃ  cung cáº¥p vá»›i giÃ¡ nháº­p khÃ¡c nhau cho cÃ¹ng sáº£n pháº©m
+
+-- Romance Books - Nhiá»u NCC cung cáº¥p cÃ¹ng sáº£n pháº©m vá»›i giÃ¡ khÃ¡c nhau
+('NCCSP_NCC02_SP0101','NCC02','SP0101',41500,TRUE), -- NCC02 giÃ¡ tháº¥p hÆ¡n NCC01
+('NCCSP_NCC03_SP0101','NCC03','SP0101',43500,TRUE), -- NCC03 giÃ¡ cao hÆ¡n NCC01
+('NCCSP_NCC10_SP0101','NCC10','SP0101',40500,TRUE), -- NCC10 giÃ¡ ráº» nháº¥t
+
+('NCCSP_NCC02_SP0102','NCC02','SP0102',44500,TRUE),
+('NCCSP_NCC05_SP0102','NCC05','SP0102',46000,TRUE),
+('NCCSP_NCC10_SP0102','NCC10','SP0102',43000,TRUE),
+
+('NCCSP_NCC01_SP0103','NCC01','SP0103',39000,TRUE), -- NCC01 cung cáº¥p thÃªm
+('NCCSP_NCC03_SP0103','NCC03','SP0103',40000,TRUE),
+('NCCSP_NCC06_SP0103','NCC06','SP0103',38500,TRUE), -- GiÃ¡ tá»‘t nháº¥t
+
+-- Horror Books - Cáº¡nh tranh máº¡nh
+('NCCSP_NCC02_SP0201','NCC02','SP0201',47000,TRUE), -- Tháº¥p hÆ¡n NCC01
+('NCCSP_NCC03_SP0201','NCC03','SP0201',49500,TRUE),
+('NCCSP_NCC05_SP0201','NCC05','SP0201',46500,TRUE), -- GiÃ¡ cáº¡nh tranh
+('NCCSP_NCC08_SP0201','NCC08','SP0201',50000,TRUE),
+
+('NCCSP_NCC05_SP0202','NCC05','SP0202',51000,TRUE),
+('NCCSP_NCC07_SP0202','NCC07','SP0202',53500,TRUE),
+('NCCSP_NCC10_SP0202','NCC10','SP0202',50500,TRUE),
+
+('NCCSP_NCC02_SP0203','NCC02','SP0203',48500,TRUE),
+('NCCSP_NCC04_SP0203','NCC04','SP0203',50000,TRUE),
+('NCCSP_NCC09_SP0203','NCC09','SP0203',48000,TRUE), -- GiÃ¡ tá»‘t
+
+-- Fantasy Books - Äa dáº¡ng nhÃ  cung cáº¥p
+('NCCSP_NCC01_SP0301','NCC01','SP0301',50000,TRUE), -- NCC01 cáº¡nh tranh vá»›i NCC03
+('NCCSP_NCC05_SP0301','NCC05','SP0301',52000,TRUE),
+('NCCSP_NCC07_SP0301','NCC07','SP0301',49500,TRUE), -- GiÃ¡ tá»‘t nháº¥t
+
+('NCCSP_NCC02_SP0302','NCC02','SP0302',55000,TRUE),
+('NCCSP_NCC06_SP0302','NCC06','SP0302',57000,TRUE),
+('NCCSP_NCC08_SP0302','NCC08','SP0302',54500,TRUE),
+
+('NCCSP_NCC01_SP0303','NCC01','SP0303',51500,TRUE),
+('NCCSP_NCC04_SP0303','NCC04','SP0303',53000,TRUE),
+('NCCSP_NCC09_SP0303','NCC09','SP0303',50500,TRUE),
+
+-- Business Books - Nhiá»u lá»±a chá»n
+('NCCSP_NCC01_SP0401','NCC01','SP0401',58000,TRUE), -- NCC01 cáº¡nh tranh
+('NCCSP_NCC02_SP0401','NCC02','SP0401',60000,TRUE),
+('NCCSP_NCC05_SP0401','NCC05','SP0401',57500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP0401','NCC08','SP0401',61000,TRUE),
+
+('NCCSP_NCC01_SP0402','NCC01','SP0402',61000,TRUE),
+('NCCSP_NCC04_SP0402','NCC04','SP0402',63000,TRUE),
+('NCCSP_NCC07_SP0402','NCC07','SP0402',60500,TRUE),
+
+-- Drama Books
+('NCCSP_NCC01_SP0501','NCC01','SP0501',47000,TRUE), -- NCC01 cáº¡nh tranh vá»›i NCC03
+('NCCSP_NCC02_SP0501','NCC02','SP0501',49000,TRUE),
+('NCCSP_NCC06_SP0501','NCC06','SP0501',46500,TRUE), -- GiÃ¡ tá»‘t
+('NCCSP_NCC08_SP0501','NCC08','SP0501',49500,TRUE),
+
+('NCCSP_NCC01_SP0502','NCC01','SP0502',51000,TRUE),
+('NCCSP_NCC05_SP0502','NCC05','SP0502',53000,TRUE),
+('NCCSP_NCC09_SP0502','NCC09','SP0502',50500,TRUE),
+
+-- Biography Books - Äa dáº¡ng nguá»“n cung
+('NCCSP_NCC02_SP0601','NCC02','SP0601',54000,TRUE), -- Tháº¥p hÆ¡n NCC01
+('NCCSP_NCC03_SP0601','NCC03','SP0601',56000,TRUE),
+('NCCSP_NCC05_SP0601','NCC05','SP0601',53500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC09_SP0601','NCC09','SP0601',57000,TRUE),
+
+('NCCSP_NCC02_SP0602','NCC02','SP0602',57000,TRUE),
+('NCCSP_NCC04_SP0602','NCC04','SP0602',59000,TRUE),
+('NCCSP_NCC07_SP0602','NCC07','SP0602',56500,TRUE),
+
+-- Cook Books - Cáº¡nh tranh giÃ¡
+('NCCSP_NCC01_SP0701','NCC01','SP0701',42000,TRUE), -- NCC01 thÃªm vÃ o
+('NCCSP_NCC03_SP0701','NCC03','SP0701',44000,TRUE),
+('NCCSP_NCC06_SP0701','NCC06','SP0701',41500,TRUE), -- GiÃ¡ tá»‘t
+('NCCSP_NCC08_SP0701','NCC08','SP0701',44500,TRUE),
+
+('NCCSP_NCC01_SP0702','NCC01','SP0702',46000,TRUE),
+('NCCSP_NCC05_SP0702','NCC05','SP0702',48000,TRUE),
+('NCCSP_NCC09_SP0702','NCC09','SP0702',45500,TRUE),
+
+-- Poetry Books
+('NCCSP_NCC01_SP0801','NCC01','SP0801',37000,TRUE), -- NCC01 tháº¥p hÆ¡n NCC02
+('NCCSP_NCC03_SP0801','NCC03','SP0801',39000,TRUE),
+('NCCSP_NCC05_SP0801','NCC05','SP0801',36500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC07_SP0801','NCC07','SP0801',39500,TRUE),
+
+('NCCSP_NCC01_SP0802','NCC01','SP0802',41000,TRUE),
+('NCCSP_NCC04_SP0802','NCC04','SP0802',43000,TRUE),
+('NCCSP_NCC06_SP0802','NCC06','SP0802',40500,TRUE),
+
+-- Art Books - Nhiá»u nhÃ  cung cáº¥p chuyÃªn nghiá»‡p
+('NCCSP_NCC01_SP0901','NCC01','SP0901',47000,TRUE), -- NCC01 cáº¡nh tranh
+('NCCSP_NCC03_SP0901','NCC03','SP0901',49000,TRUE),
+('NCCSP_NCC06_SP0901','NCC06','SP0901',46500,TRUE), -- GiÃ¡ tá»‘t
+('NCCSP_NCC07_SP0901','NCC07','SP0901',49500,TRUE),
+('NCCSP_NCC08_SP0901','NCC08','SP0901',48500,TRUE),
+
+('NCCSP_NCC02_SP0902','NCC02','SP0902',51000,TRUE),
+('NCCSP_NCC04_SP0902','NCC04','SP0902',53000,TRUE),
+('NCCSP_NCC09_SP0902','NCC09','SP0902',50500,TRUE),
+
+-- Architecture Books
+('NCCSP_NCC01_SP1001','NCC01','SP1001',53000,TRUE), -- NCC01 tháº¥p hÆ¡n NCC05
+('NCCSP_NCC03_SP1001','NCC03','SP1001',55000,TRUE),
+('NCCSP_NCC06_SP1001','NCC06','SP1001',52500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1001','NCC08','SP1001',56000,TRUE),
+
+('NCCSP_NCC02_SP1002','NCC02','SP1002',57000,TRUE),
+('NCCSP_NCC04_SP1002','NCC04','SP1002',59000,TRUE),
+('NCCSP_NCC07_SP1002','NCC07','SP1002',56500,TRUE),
+
+-- Modelkit - Sáº£n pháº©m cao cáº¥p nhiá»u nhÃ  cung cáº¥p
+('NCCSP_NCC05_SP1101','NCC05','SP1101',215000,TRUE), -- NCC05 tháº¥p hÆ¡n NCC07
+('NCCSP_NCC08_SP1101','NCC08','SP1101',225000,TRUE),
+('NCCSP_NCC09_SP1101','NCC09','SP1101',210000,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC10_SP1101','NCC10','SP1101',230000,TRUE),
+
+('NCCSP_NCC05_SP1102','NCC05','SP1102',190000,TRUE),
+('NCCSP_NCC06_SP1102','NCC06','SP1102',200000,TRUE),
+('NCCSP_NCC09_SP1102','NCC09','SP1102',188000,TRUE), -- GiÃ¡ tá»‘t
+
+-- Figure - Sáº£n pháº©m premium
+('NCCSP_NCC05_SP1201','NCC05','SP1201',170000,TRUE), -- NCC05 tháº¥p hÆ¡n NCC08
+('NCCSP_NCC06_SP1201','NCC06','SP1201',180000,TRUE),
+('NCCSP_NCC07_SP1201','NCC07','SP1201',165000,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC09_SP1201','NCC09','SP1201',185000,TRUE),
+
+('NCCSP_NCC02_SP1202','NCC02','SP1202',180000,TRUE),
+('NCCSP_NCC04_SP1202','NCC04','SP1202',190000,TRUE),
+('NCCSP_NCC10_SP1202','NCC10','SP1202',178000,TRUE),
+
+-- Calculator - Thiáº¿t bá»‹ cÃ´ng nghá»‡ nhiá»u nguá»“n
+('NCCSP_NCC04_SP1301','NCC04','SP1301',415000,TRUE), -- NCC04 tháº¥p hÆ¡n NCC09
+('NCCSP_NCC05_SP1301','NCC05','SP1301',425000,TRUE),
+('NCCSP_NCC06_SP1301','NCC06','SP1301',410000,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC07_SP1301','NCC07','SP1301',430000,TRUE),
+('NCCSP_NCC08_SP1301','NCC08','SP1301',418000,TRUE),
+
+('NCCSP_NCC03_SP1302','NCC03','SP1302',460000,TRUE),
+('NCCSP_NCC05_SP1302','NCC05','SP1302',470000,TRUE),
+('NCCSP_NCC10_SP1302','NCC10','SP1302',458000,TRUE),
+
+-- Note - VÄƒn phÃ²ng pháº©m phá»• biáº¿n
+('NCCSP_NCC02_SP1401','NCC02','SP1401',23000,TRUE), -- NCC02 tháº¥p hÆ¡n NCC06
+('NCCSP_NCC04_SP1401','NCC04','SP1401',25000,TRUE),
+('NCCSP_NCC05_SP1401','NCC05','SP1401',22500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1401','NCC08','SP1401',25500,TRUE),
+('NCCSP_NCC10_SP1401','NCC10','SP1401',23500,TRUE),
+
+('NCCSP_NCC01_SP1402','NCC01','SP1402',20000,TRUE),
+('NCCSP_NCC03_SP1402','NCC03','SP1402',22000,TRUE),
+('NCCSP_NCC07_SP1402','NCC07','SP1402',19500,TRUE), -- GiÃ¡ tá»‘t
+
+-- Watch - Sáº£n pháº©m cao cáº¥p
+('NCCSP_NCC04_SP1501','NCC04','SP1501',520000,TRUE), -- NCC04 tháº¥p hÆ¡n NCC09
+('NCCSP_NCC05_SP1501','NCC05','SP1501',530000,TRUE),
+('NCCSP_NCC06_SP1501','NCC06','SP1501',515000,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC07_SP1501','NCC07','SP1501',535000,TRUE),
+('NCCSP_NCC08_SP1501','NCC08','SP1501',528000,TRUE),
+
+('NCCSP_NCC03_SP1502','NCC03','SP1502',540000,TRUE),
+('NCCSP_NCC05_SP1502','NCC05','SP1502',550000,TRUE),
+('NCCSP_NCC10_SP1502','NCC10','SP1502',538000,TRUE),
+
+-- Pen - BÃºt cao cáº¥p nhiá»u nhÃ  cung cáº¥p
+('NCCSP_NCC02_SP1601','NCC02','SP1601',280000,TRUE), -- NCC02 tháº¥p hÆ¡n NCC04
+('NCCSP_NCC05_SP1601','NCC05','SP1601',290000,TRUE),
+('NCCSP_NCC06_SP1601','NCC06','SP1601',275000,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1601','NCC08','SP1601',295000,TRUE),
+('NCCSP_NCC09_SP1601','NCC09','SP1601',288000,TRUE),
+
+('NCCSP_NCC01_SP1602','NCC01','SP1602',360000,TRUE),
+('NCCSP_NCC03_SP1602','NCC03','SP1602',370000,TRUE),
+('NCCSP_NCC07_SP1602','NCC07','SP1602',358000,TRUE), -- GiÃ¡ tá»‘t
+
+-- Draw - Dá»¥ng cá»¥ váº½ Ä‘a dáº¡ng
+('NCCSP_NCC02_SP1701','NCC02','SP1701',33000,TRUE), -- NCC02 tháº¥p hÆ¡n NCC06
+('NCCSP_NCC04_SP1701','NCC04','SP1701',35000,TRUE),
+('NCCSP_NCC05_SP1701','NCC05','SP1701',32500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1701','NCC08','SP1701',36000,TRUE),
+('NCCSP_NCC10_SP1701','NCC10','SP1701',33500,TRUE),
+
+('NCCSP_NCC01_SP1702','NCC01','SP1702',40000,TRUE),
+('NCCSP_NCC03_SP1702','NCC03','SP1702',42000,TRUE),
+('NCCSP_NCC07_SP1702','NCC07','SP1702',39500,TRUE),
+
+-- Studentbook - SÃ¡ch há»c sinh nhiá»u nhÃ  cung cáº¥p
+('NCCSP_NCC02_SP1801','NCC02','SP1801',27000,TRUE), -- NCC02 tháº¥p hÆ¡n NCC06
+('NCCSP_NCC04_SP1801','NCC04','SP1801',29000,TRUE),
+('NCCSP_NCC05_SP1801','NCC05','SP1801',26500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1801','NCC08','SP1801',29500,TRUE),
+('NCCSP_NCC09_SP1801','NCC09','SP1801',27500,TRUE),
+
+('NCCSP_NCC01_SP1802','NCC01','SP1802',25000,TRUE),
+('NCCSP_NCC03_SP1802','NCC03','SP1802',27000,TRUE),
+('NCCSP_NCC07_SP1802','NCC07','SP1802',24500,TRUE), -- GiÃ¡ tá»‘t
+
+-- CompaEke - Dá»¥ng cá»¥ hÃ¬nh há»c Ä‘a dáº¡ng
+('NCCSP_NCC02_SP1901','NCC02','SP1901',22000,TRUE), -- NCC02 tháº¥p hÆ¡n NCC04
+('NCCSP_NCC05_SP1901','NCC05','SP1901',24000,TRUE),
+('NCCSP_NCC06_SP1901','NCC06','SP1901',21500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC08_SP1901','NCC08','SP1901',24500,TRUE),
+('NCCSP_NCC09_SP1901','NCC09','SP1901',22500,TRUE),
+
+('NCCSP_NCC01_SP1902','NCC01','SP1902',25000,TRUE),
+('NCCSP_NCC03_SP1902','NCC03','SP1902',27000,TRUE),
+('NCCSP_NCC07_SP1902','NCC07','SP1902',24500,TRUE),
+
+-- PencilEraser - Sáº£n pháº©m phá»• biáº¿n nháº¥t
+('NCCSP_NCC01_SP2001','NCC01','SP2001',17000,TRUE), -- NCC01 tháº¥p hÆ¡n NCC04
+('NCCSP_NCC02_SP2001','NCC02','SP2001',19000,TRUE),
+('NCCSP_NCC03_SP2001','NCC03','SP2001',16500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC05_SP2001','NCC05','SP2001',18500,TRUE),
+('NCCSP_NCC06_SP2001','NCC06','SP2001',17500,TRUE),
+('NCCSP_NCC07_SP2001','NCC07','SP2001',19500,TRUE),
+('NCCSP_NCC08_SP2001','NCC08','SP2001',18000,TRUE),
+('NCCSP_NCC09_SP2001','NCC09','SP2001',17800,TRUE),
+('NCCSP_NCC10_SP2001','NCC10','SP2001',16800,TRUE), -- GiÃ¡ ráº» nháº¥t
+
+('NCCSP_NCC01_SP2002','NCC01','SP2002',14000,TRUE),
+('NCCSP_NCC03_SP2002','NCC03','SP2002',16000,TRUE),
+('NCCSP_NCC05_SP2002','NCC05','SP2002',13500,TRUE), -- Tá»‘t nháº¥t
+('NCCSP_NCC07_SP2002','NCC07','SP2002',16500,TRUE),
+('NCCSP_NCC09_SP2002','NCC09','SP2002',14500,TRUE),
+
+-- ThÃªm nhiá»u mapping cho cÃ¡c sáº£n pháº©m khÃ¡c Ä‘á»ƒ tÄƒng tÃ­nh Ä‘a dáº¡ng
+('NCCSP_NCC01_SP0104','NCC01','SP0104',40000,TRUE),
+('NCCSP_NCC02_SP0104','NCC02','SP0104',42000,TRUE),
+('NCCSP_NCC08_SP0104','NCC08','SP0104',39500,TRUE), -- GiÃ¡ tá»‘t
+
+('NCCSP_NCC03_SP0204','NCC03','SP0204',53000,TRUE),
+('NCCSP_NCC06_SP0204','NCC06','SP0204',55000,TRUE),
+('NCCSP_NCC09_SP0204','NCC09','SP0204',52500,TRUE), -- GiÃ¡ tá»‘t
+
+('NCCSP_NCC02_SP0304','NCC02','SP0304',54000,TRUE),
+('NCCSP_NCC04_SP0304','NCC04','SP0304',56000,TRUE),
+('NCCSP_NCC07_SP0304','NCC07','SP0304',53500,TRUE), -- GiÃ¡ tá»‘t
+
+('NCCSP_NCC04_SP0403','NCC04','SP0403',56000,TRUE),
+('NCCSP_NCC06_SP0403','NCC06','SP0403',58000,TRUE),
+('NCCSP_NCC09_SP0403','NCC09','SP0403',55500,TRUE), -- GiÃ¡ tá»‘t
+
+-- ThÃªm nhiá»u sáº£n pháº©m cao cáº¥p cÃ³ nhiá»u nhÃ  cung cáº¥p
+('NCCSP_NCC02_SP1103','NCC02','SP1103',230000,TRUE),
+('NCCSP_NCC04_SP1103','NCC04','SP1103',240000,TRUE),
+('NCCSP_NCC06_SP1103','NCC06','SP1103',225000,TRUE), -- Tá»‘t nháº¥t
+
+('NCCSP_NCC03_SP1203','NCC03','SP1203',160000,TRUE),
+('NCCSP_NCC05_SP1203','NCC05','SP1203',170000,TRUE),
+('NCCSP_NCC10_SP1203','NCC10','SP1203',158000,TRUE), -- GiÃ¡ tá»‘t
+
+('NCCSP_NCC01_SP1503','NCC01','SP1503',575000,TRUE),
+('NCCSP_NCC02_SP1503','NCC02','SP1503',585000,TRUE),
+('NCCSP_NCC04_SP1503','NCC04','SP1503',570000,TRUE), -- Tá»‘t nháº¥t
+
+-- ThÃªm mapping Ä‘á»ƒ má»i sáº£n pháº©m Ä‘á»u cÃ³ Ã­t nháº¥t 2-3 nhÃ  cung cáº¥p
+('NCCSP_NCC05_SP0105','NCC05','SP0105',43000,TRUE),
+('NCCSP_NCC08_SP0105','NCC08','SP0105',45000,TRUE),
+('NCCSP_NCC09_SP0105','NCC09','SP0105',42500,TRUE), -- GiÃ¡ tá»‘t
+
+('NCCSP_NCC04_SP0205','NCC04','SP0205',50000,TRUE),
+('NCCSP_NCC07_SP0205','NCC07','SP0205',52000,TRUE),
+('NCCSP_NCC08_SP0205','NCC08','SP0205',49500,TRUE); -- GiÃ¡ tá»‘t
+
+-- =========================
+-- END CROSS-SUPPLIER MAPPINGS
+-- =========================
+
 
 

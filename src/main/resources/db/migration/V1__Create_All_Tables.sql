@@ -83,6 +83,9 @@ CREATE TABLE IF NOT EXISTS `supplier` (
     `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- `supplier_product` table moved later so `product` exists before FK references.
+
+
 -- =========================
 -- PROMOTION TYPE & PROMOTION
 -- =========================
@@ -138,6 +141,22 @@ CREATE TABLE IF NOT EXISTS `product` (
     `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`category_code`) REFERENCES `product_category`(`category_code`),
     FOREIGN KEY (`promotion_code`) REFERENCES `promotion`(`promotion_code`)
+);
+
+-- =========================
+-- SUPPLIER_PRODUCT (moved here to ensure `product` exists first)
+-- =========================
+CREATE TABLE IF NOT EXISTS `supplier_product` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `supplier_product_code` VARCHAR(50) UNIQUE NOT NULL,
+    `supplier_code` VARCHAR(50),
+    `product_code` VARCHAR(50),
+    `import_price` DECIMAL(20,2),
+    `status` BOOLEAN DEFAULT TRUE,
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`supplier_code`) REFERENCES `supplier`(`supplier_code`),
+    FOREIGN KEY (`product_code`) REFERENCES `product`(`product_code`)
 );
 
 -- =========================

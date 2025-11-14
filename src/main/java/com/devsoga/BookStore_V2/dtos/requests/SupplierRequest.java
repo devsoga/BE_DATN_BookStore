@@ -13,4 +13,5 @@ public class SupplierRequest {
     private String phoneNumber;
     private String email;
     private Boolean status; // optional
+    private java.util.List<com.devsoga.BookStore_V2.dtos.requests.SupplierProductRequest> productProvide; // optional list of supplier products to create/update
 }

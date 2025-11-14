@@ -23,6 +23,11 @@ public class SupplierController {
         return supplierService.getById(supplierCode);
     }
 
+    @GetMapping("/{supplierCode}/products")
+    public BaseRespone getProductsBySupplier(@PathVariable String supplierCode) {
+        return supplierService.getProductsBySupplier(supplierCode);
+    }
+
     @PostMapping("/create")
     public BaseRespone create(@RequestBody SupplierRequest req) {
         return supplierService.create(req);
