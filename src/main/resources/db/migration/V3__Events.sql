@@ -13,9 +13,19 @@ CREATE EVENT IF NOT EXISTS ev_expire_promotions
 ON SCHEDULE EVERY 1 SECOND
 STARTS CURRENT_TIMESTAMP
 DO
+BEGIN
+    -- expire promotions whose end_date has passed
     UPDATE promotion
     SET status = FALSE
     WHERE status = TRUE
       AND end_date IS NOT NULL
       AND end_date < NOW();
+
+    -- expire coupons whose end_date has passed (one-time or time-limited coupons)
+    UPDATE coupon
+    SET status = FALSE
+    WHERE status = TRUE
+      AND end_date IS NOT NULL
+      AND end_date < NOW();
+END;
 

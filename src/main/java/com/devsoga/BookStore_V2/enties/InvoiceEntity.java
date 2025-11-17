@@ -33,6 +33,12 @@ public class InvoiceEntity extends BaseAuditable {
     @Column(name = "status")
     private Boolean status = Boolean.TRUE;
 
+    @Column(name = "promotion_customer_value")
+    private BigDecimal promotionCustomerValue;
+
+    @Column(name = "coupon_discount_value")
+    private BigDecimal couponDiscountValue;
+
     @Column(name = "discount")
     private BigDecimal discount;
 

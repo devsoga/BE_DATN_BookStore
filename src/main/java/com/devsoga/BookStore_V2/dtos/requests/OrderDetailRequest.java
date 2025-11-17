@@ -8,4 +8,6 @@ import lombok.Setter;
 public class OrderDetailRequest {
     private String productCode;
     private Integer quantity;
+    private String promotionCode; // optional per-line promotion code
+    private java.math.BigDecimal discountValue; // optional suggested discount (monetary)
 }

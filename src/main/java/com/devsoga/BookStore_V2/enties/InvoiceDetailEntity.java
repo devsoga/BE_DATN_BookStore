@@ -27,6 +27,15 @@ public class InvoiceDetailEntity {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
+    @Column(name = "final_price")
+    private BigDecimal finalPrice;
+
+    @Column(name = "promotion_code")
+    private String promotionCode;
+
+    @Column(name = "discount_value")
+    private BigDecimal discountValue;
+
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
