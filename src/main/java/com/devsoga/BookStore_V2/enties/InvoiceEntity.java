@@ -31,17 +31,18 @@ public class InvoiceEntity extends BaseAuditable {
     private PaymentMethod paymentMethod;
 
 
-    @Column(name = "promotion_customer_value")
-    private BigDecimal promotionCustomerValue;
-
     @Column(name = "promotion_customer_code")
     private String promotionCustomerCode;
 
-    @Column(name = "coupon_discount_value")
-    private BigDecimal couponDiscountValue;
 
     @Column(name = "coupon_code")
     private String couponCode;
+
+    @Column(name = "promotion_customer_value")
+    private BigDecimal promotionCustomerValue;
+
+    @Column(name = "coupon_discount_value")
+    private BigDecimal couponDiscountValue;
 
     @Column(name = "discount")
     private BigDecimal discount;
