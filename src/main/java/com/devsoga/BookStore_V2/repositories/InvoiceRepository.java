@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<InvoiceEntity, Integer> {
     Optional<InvoiceEntity> findByOrderCode(String orderCode);
+    List<InvoiceEntity> findByCustomerEntity_CustomerCode(String customerCode);
 }

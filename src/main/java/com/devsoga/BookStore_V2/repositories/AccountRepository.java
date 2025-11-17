@@ -11,4 +11,6 @@ import com.devsoga.BookStore_V2.enties.AccountEntity;
 public interface AccountRepository extends JpaRepository<AccountEntity, Integer> {
     
     List<AccountEntity> findByUsername(String username);
+    
+    List<AccountEntity> findByPhoneNumber(String phoneNumber);
 }

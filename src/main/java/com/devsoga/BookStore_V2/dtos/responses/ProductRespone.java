@@ -24,5 +24,6 @@ public class ProductRespone {
     private PromotionResponse promotion;
     private String categoryCode;
     private String categoryName;
+    private String categoryType;
     private Integer stockQuantity;
 }

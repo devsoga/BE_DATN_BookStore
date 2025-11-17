@@ -7,6 +7,7 @@ import com.devsoga.BookStore_V2.repositories.AccountRepository;
 import com.devsoga.BookStore_V2.repositories.RoleRepository;
 import com.devsoga.BookStore_V2.enties.RoleEntity;
 import com.devsoga.BookStore_V2.payload.respone.BaseRespone;
+import com.devsoga.BookStore_V2.repositories.PromotionRepository;
 
 import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,9 @@ public class AccountService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PromotionRepository promotionRepository;
     
     @Autowired
     private com.devsoga.BookStore_V2.repositories.CustomerRepository customerRepository;
@@ -54,6 +58,12 @@ public class AccountService {
                     var customer = acct.getCustomerList().get(0);
                     customerCode = customer.getCustomerCode();
                     dto.setCustomerName(customer.getCustomerName());
+                        // populate points from customer
+                        try {
+                            if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
+                        } catch (Exception ex) {
+                            // ignore
+                        }
                     // expose promotion_code if linked via customer type
                     if (customer.getCustomerTypeEntity() != null) {
                         var ct = customer.getCustomerTypeEntity();
@@ -61,6 +71,14 @@ public class AccountService {
                         dto.setCustomerTypeName(ct.getCustomerTypeName());
                         if (ct.getPromotionCode() != null && !ct.getPromotionCode().isBlank()) {
                             dto.setPromotion_code(ct.getPromotionCode());
+                            try {
+                                var promo = promotionRepository.findByPromotionCode(ct.getPromotionCode()).orElse(null);
+                                if (promo != null && promo.getValue() != null) {
+                                    dto.setMemberDiscount(promo.getValue());
+                                }
+                            } catch (Exception ex) {
+                                // ignore and leave memberDiscount null
+                            }
                         }
                     }
                 }
@@ -74,6 +92,70 @@ public class AccountService {
             response.setData(dto);
         } else {
             throw new RuntimeException("Account not found");
+        }
+        return response;
+    }
+
+    public BaseRespone getAccountDetailsByPhone(String phoneNumber) {
+        BaseRespone response = new BaseRespone();
+        List<AccountEntity> listAccount = accountRepository.findByPhoneNumber(phoneNumber);
+        if (listAccount != null && !listAccount.isEmpty()) {
+            AccountEntity acct = listAccount.get(0);
+            AccountRespone dto = new AccountRespone();
+            dto.setAccountCode(acct.getAccountCode());
+            dto.setUsername(acct.getUsername());
+            dto.setEmail(acct.getEmail());
+            String roleCode = acct.getRoleEntity() != null ? acct.getRoleEntity().getRoleCode() : null;
+            dto.setRoleCode(roleCode);
+            // only return customerCode when role is USER
+            if ("USER".equalsIgnoreCase(roleCode)) {
+                String customerCode = null;
+                if (acct.getCustomerList() != null && !acct.getCustomerList().isEmpty()) {
+                    var customer = acct.getCustomerList().get(0);
+                    customerCode = customer.getCustomerCode();
+                    dto.setCustomerName(customer.getCustomerName());
+                        // populate points from customer
+                        try {
+                            if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
+                        } catch (Exception ex) {
+                            // ignore
+                        }
+                        // populate points from customer
+                        try {
+                            if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
+                        } catch (Exception ex) {
+                            // ignore
+                        }
+                    if (customer.getCustomerTypeEntity() != null) {
+                        var ct = customer.getCustomerTypeEntity();
+                        dto.setCustomerTypeCode(ct.getCustomerTypeCode());
+                        dto.setCustomerTypeName(ct.getCustomerTypeName());
+                        if (ct.getPromotionCode() != null && !ct.getPromotionCode().isBlank()) {
+                            dto.setPromotion_code(ct.getPromotionCode());
+                            try {
+                                var promo = promotionRepository.findByPromotionCode(ct.getPromotionCode()).orElse(null);
+                                if (promo != null && promo.getValue() != null) {
+                                    dto.setMemberDiscount(promo.getValue());
+                                }
+                            } catch (Exception ex) {
+                                // ignore
+                            }
+                        }
+                    }
+                }
+                dto.setCustomerCode(customerCode);
+            } else {
+                dto.setCustomerCode(null);
+            }
+
+            // include phone_number on response by placing into email field if email null? better to set username/email remain as-is
+            response.setStatusCode(200);
+            response.setMessage("Account found by phone");
+            response.setData(dto);
+        } else {
+            response.setStatusCode(404);
+            response.setMessage("Account not found for phone: " + phoneNumber);
+            response.setData(null);
         }
         return response;
     }

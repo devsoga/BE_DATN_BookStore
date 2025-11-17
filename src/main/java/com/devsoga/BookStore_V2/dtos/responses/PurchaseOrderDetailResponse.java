@@ -15,6 +15,7 @@ public class PurchaseOrderDetailResponse {
     private Integer quantitySold;
     private BigDecimal importPrice;
     private BigDecimal totalAmount;
+    private BigDecimal discountValue;
     private String productCode;
     private String productName;
     private LocalDateTime createdDate;

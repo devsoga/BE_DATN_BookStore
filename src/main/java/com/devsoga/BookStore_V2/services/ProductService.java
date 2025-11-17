@@ -36,6 +36,9 @@ public class ProductService {
     private com.devsoga.BookStore_V2.repositories.ProductCategoryRepository productCategoryRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
+    private com.devsoga.BookStore_V2.repositories.CartRepository cartRepository;
+
+    @org.springframework.beans.factory.annotation.Autowired
     private com.devsoga.BookStore_V2.repositories.InventoryRepository inventoryRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -199,6 +202,39 @@ public class ProductService {
             }
 
             ProductEntity saved = productRepository.save(entity);
+            // propagate promotionCode to existing cart rows for this product
+            try {
+                cartRepository.updatePromotionCodeByProductCode(saved.getProductCode(), saved.getPromotionCode());
+                // also compute and update discountValue (monetary) and totalAmount in cart rows
+                try {
+                    var carts = cartRepository.findByProductEntity_ProductCode(saved.getProductCode());
+                    if (carts != null && !carts.isEmpty()) {
+                        com.devsoga.BookStore_V2.enties.PromotionEntity promo = null;
+                        if (saved.getPromotionCode() != null && !saved.getPromotionCode().isBlank()) {
+                            promo = promotionRepository.findByPromotionCode(saved.getPromotionCode()).orElse(null);
+                        }
+                        java.math.BigDecimal unitPrice = priceHistoryRepository.findLatestActivePriceByProductCode(saved.getProductCode()).orElse(java.math.BigDecimal.ZERO);
+                        for (var c : carts) {
+                            java.math.BigDecimal discountAmount = java.math.BigDecimal.ZERO;
+                            if (promo != null && isPromotionValid(promo)) {
+                                if (promo.getPromotionTypeEntity() != null && "PT_PERCENT".equalsIgnoreCase(promo.getPromotionTypeEntity().getPromotionTypeCode())) {
+                                    discountAmount = unitPrice.multiply(promo.getValue());
+                                } else {
+                                    discountAmount = promo.getValue() == null ? java.math.BigDecimal.ZERO : promo.getValue();
+                                }
+                            }
+                            c.setDiscountValue(discountAmount);
+                            int qty = c.getQuantity() == null ? 0 : c.getQuantity();
+                            java.math.BigDecimal effectiveUnit = unitPrice.subtract(discountAmount);
+                            if (effectiveUnit.compareTo(java.math.BigDecimal.ZERO) < 0) effectiveUnit = java.math.BigDecimal.ZERO;
+                            c.setTotalAmount(effectiveUnit.multiply(java.math.BigDecimal.valueOf(qty)));
+                        }
+                        cartRepository.saveAll(carts);
+                    }
+                } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                // don't fail product creation if cart update fails
+            }
             resp.setStatusCode(HttpStatus.CREATED.value());
             resp.setMessage("Created");
             resp.setData(toResp(saved));
@@ -237,6 +273,39 @@ public class ProductService {
             }
 
             ProductEntity saved = productRepository.save(exist);
+            // propagate promotionCode change to existing cart rows for this product
+            try {
+                cartRepository.updatePromotionCodeByProductCode(saved.getProductCode(), saved.getPromotionCode());
+                // also compute and update discountValue (monetary) and totalAmount in cart rows
+                try {
+                    var carts = cartRepository.findByProductEntity_ProductCode(saved.getProductCode());
+                    if (carts != null && !carts.isEmpty()) {
+                        com.devsoga.BookStore_V2.enties.PromotionEntity promo = null;
+                        if (saved.getPromotionCode() != null && !saved.getPromotionCode().isBlank()) {
+                            promo = promotionRepository.findByPromotionCode(saved.getPromotionCode()).orElse(null);
+                        }
+                        java.math.BigDecimal unitPrice = priceHistoryRepository.findLatestActivePriceByProductCode(saved.getProductCode()).orElse(java.math.BigDecimal.ZERO);
+                        for (var c : carts) {
+                            java.math.BigDecimal discountAmount = java.math.BigDecimal.ZERO;
+                            if (promo != null && isPromotionValid(promo)) {
+                                if (promo.getPromotionTypeEntity() != null && "PT_PERCENT".equalsIgnoreCase(promo.getPromotionTypeEntity().getPromotionTypeCode())) {
+                                    discountAmount = unitPrice.multiply(promo.getValue());
+                                } else {
+                                    discountAmount = promo.getValue() == null ? java.math.BigDecimal.ZERO : promo.getValue();
+                                }
+                            }
+                            c.setDiscountValue(discountAmount);
+                            int qty = c.getQuantity() == null ? 0 : c.getQuantity();
+                            java.math.BigDecimal effectiveUnit = unitPrice.subtract(discountAmount);
+                            if (effectiveUnit.compareTo(java.math.BigDecimal.ZERO) < 0) effectiveUnit = java.math.BigDecimal.ZERO;
+                            c.setTotalAmount(effectiveUnit.multiply(java.math.BigDecimal.valueOf(qty)));
+                        }
+                        cartRepository.saveAll(carts);
+                    }
+                } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+                // ignore cart update failures
+            }
             resp.setStatusCode(HttpStatus.OK.value());
             resp.setMessage("Updated");
             resp.setData(toResp(saved));
@@ -346,6 +415,8 @@ public class ProductService {
             if (p.getProductCategoryEntity() != null) {
                 r.setCategoryCode(p.getProductCategoryEntity().getCategoryCode());
                 r.setCategoryName(p.getProductCategoryEntity().getCategoryName());
+                // populate categoryType from product_category table
+                r.setCategoryType(p.getProductCategoryEntity().getCategoryType());
             }
         } catch (Exception ignored) {
             // in case of lazy loading issues, ignore and leave categoryCode null

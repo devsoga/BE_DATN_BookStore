@@ -13,4 +13,7 @@ public class OrderDetailRespone {
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalAmount;
+    private String promotionCode;
+    private BigDecimal discountValue;
+    private BigDecimal finalPrice;
 }
