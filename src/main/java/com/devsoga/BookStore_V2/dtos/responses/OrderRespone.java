@@ -10,20 +10,20 @@ import java.util.List;
 @Setter
 public class OrderRespone {
     private String orderCode;
+    private String orderType;
+    private String paymentMethod;
     private Boolean status;
-    private BigDecimal discount;
+    private Boolean isPaid;
+    private BigDecimal promotionCustomerValue; // customer type based discount
+    private BigDecimal couponDiscountValue; // coupon based discount
+    private BigDecimal discount; // additional manual discount
     private BigDecimal totalAmount;
     private BigDecimal finalAmount;
     private String customerCode;
     private String employeeCode;
-    private String promotionCode;
     private String note;
     private String address;
     private String phoneNumber;
-    private Boolean isPaid;
-    private java.math.BigDecimal memberDiscount;
-    private java.math.BigDecimal productDiscount;
-    private java.math.BigDecimal otherDiscount;
     private List<com.devsoga.BookStore_V2.dtos.responses.OrderDetailRespone> details;
 }
  

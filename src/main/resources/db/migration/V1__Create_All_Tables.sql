@@ -113,6 +113,25 @@ CREATE TABLE IF NOT EXISTS `promotion` (
     FOREIGN KEY (`promotion_type_code`) REFERENCES `promotion_type`(`promotion_type_code`)
 );
 
+CREATE TABLE IF NOT EXISTS `coupon` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `coupon_code` VARCHAR(50) UNIQUE NOT NULL,
+    `coupon_name` VARCHAR(255),
+    `description` VARCHAR(255),
+    `promotion_type_code` VARCHAR(50),
+    `value` DECIMAL(10,2) NOT NULL,
+    `start_date` DATETIME NOT NULL,
+    `end_date` DATETIME NOT NULL,
+    `status` BOOLEAN DEFAULT TRUE,      -- có đang kích hoạt coupon không
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (`promotion_type_code`) REFERENCES `promotion_type`(`promotion_type_code`)
+);
+
+
+
+
 -- =========================
 -- PRODUCT CATEGORY & PRODUCT
 -- =========================
@@ -169,6 +188,8 @@ CREATE TABLE IF NOT EXISTS `order` (
     `payment_method` ENUM('Cash','QR') NOT NULL DEFAULT 'QR',
     `status` BOOLEAN DEFAULT TRUE, 
     `is_paid` BOOLEAN DEFAULT FALSE, 
+    `promotion_customer_value` DECIMAL(20,2),
+    `coupon_discount_value` DECIMAL(20,2),
     `discount` DECIMAL(20,2),
     `total_amount` DECIMAL(20,2),
     `final_amount` DECIMAL(20,2),
@@ -189,11 +210,15 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
     `order_detail_code` VARCHAR(50) UNIQUE NOT NULL,
     `quantity` INT,
     `unit_price` DECIMAL(20,2),
+    `final_price` DECIMAL(20,2),
+    `promotion_code` VARCHAR(50),
+    `discount_value` DECIMAL(10,2),
     `total_amount` DECIMAL(20,2),
     `product_code` VARCHAR(50),
     `order_code` VARCHAR(50),
     FOREIGN KEY (`product_code`) REFERENCES `product`(`product_code`),
-    FOREIGN KEY (`order_code`) REFERENCES `order`(`order_code`) ON DELETE CASCADE
+    FOREIGN KEY (`order_code`) REFERENCES `order`(`order_code`) ON DELETE CASCADE,
+    FOREIGN KEY (`promotion_code`) REFERENCES `promotion`(`promotion_code`)
 );
 
 -- =========================

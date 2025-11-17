@@ -8,7 +8,7 @@ import com.devsoga.BookStore_V2.enties.InvoiceEntity;
 import com.devsoga.BookStore_V2.enties.ProductEntity;
 import com.devsoga.BookStore_V2.enties.CustomerEntity;
 import com.devsoga.BookStore_V2.enties.EmployeeEntity;
-import com.devsoga.BookStore_V2.enties.PromotionOrderEntity;
+
 import com.devsoga.BookStore_V2.payload.respone.BaseRespone;
 import com.devsoga.BookStore_V2.repositories.InvoiceRepository;
 import com.devsoga.BookStore_V2.repositories.ProductRepository;
@@ -23,6 +23,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.List;
 
 @Service
@@ -54,6 +56,12 @@ public class OrderService {
 
     @Autowired
     private com.devsoga.BookStore_V2.repositories.PurchaseOrderDetailRepository purchaseOrderDetailRepository;
+
+    @Autowired
+    private com.devsoga.BookStore_V2.repositories.InvoiceDetailRepository invoiceDetailRepository;
+
+    @Autowired
+    private com.devsoga.BookStore_V2.repositories.CouponRepository couponRepository;
 
     @Autowired
     private PurchaseOrderService purchaseOrderService;
@@ -114,6 +122,7 @@ public class OrderService {
 
             List<InvoiceDetailEntity> details = new ArrayList<>();
             BigDecimal total = BigDecimal.ZERO;
+            BigDecimal sumLineDiscounts = BigDecimal.ZERO;
             int idx = 1;
             // First, aggregate requested quantities per product to validate inventory availability
             java.util.Map<String, Integer> requestedByProduct = new java.util.HashMap<>();
@@ -146,117 +155,184 @@ public class OrderService {
                 int qty = Math.max(1, d.getQuantity());
                 BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
 
+                // determine promotion to apply for this line (product-first)
+                String appliedPromoCode = null;
+                BigDecimal promotionValue = BigDecimal.ZERO; // Store original promotion value
+                BigDecimal lineDiscount = BigDecimal.ZERO;
+                BigDecimal finalUnitPrice = unitPrice; // Price after discount per unit
+                
+                try {
+                    String reqPromo = d.getPromotionCode();
+                    com.devsoga.BookStore_V2.enties.PromotionEntity promo = null;
+                    if (reqPromo != null && !reqPromo.isBlank()) {
+                        promo = promotionRepository.findByPromotionCode(reqPromo).orElse(null);
+                    }
+                    if (promo == null && prod.getPromotionCode() != null) {
+                        promo = promotionRepository.findByPromotionCode(prod.getPromotionCode()).orElse(null);
+                    }
+                    if (promo != null && promo.getPromotionTypeEntity() != null && promo.getValue() != null) {
+                        promotionValue = promo.getValue(); // Store original promotion value
+                        appliedPromoCode = promo.getPromotionCode();
+                        
+                        // Calculate discount based on promotion type
+                        if (promotionValue.compareTo(BigDecimal.ONE) < 0) {
+                            // Percentage discount (< 1.0)
+                            BigDecimal discountPerUnit = unitPrice.multiply(promotionValue);
+                            finalUnitPrice = unitPrice.subtract(discountPerUnit);
+                            lineDiscount = discountPerUnit.multiply(BigDecimal.valueOf(qty));
+                        } else {
+                            // Fixed amount discount (>= 1.0) 
+                            finalUnitPrice = unitPrice.subtract(promotionValue);
+                            if (finalUnitPrice.compareTo(BigDecimal.ZERO) < 0) {
+                                finalUnitPrice = BigDecimal.ZERO;
+                            }
+                            lineDiscount = promotionValue.multiply(BigDecimal.valueOf(qty));
+                        }
+                    }
+                } catch (Exception ignore) {
+                    // if any issue computing promo, leave discount zero
+                    promotionValue = BigDecimal.ZERO;
+                    finalUnitPrice = unitPrice;
+                }
+
                 InvoiceDetailEntity det = new InvoiceDetailEntity();
                 det.setOrderDetailCode("OD_" + System.currentTimeMillis() + "_" + (idx++));
                 det.setProductEntity(prod);
                 det.setQuantity(qty);
                 det.setUnitPrice(unitPrice);
                 det.setTotalAmount(lineTotal);
+                det.setPromotionCode(appliedPromoCode);
+                det.setDiscountValue(promotionValue); // Store original promotion value, not total discount
+                det.setFinalPrice(finalUnitPrice.multiply(BigDecimal.valueOf(qty))); // Final price = discounted unit price * quantity
                 det.setOrderEntity(inv);
                 details.add(det);
 
                 total = total.add(lineTotal);
+                sumLineDiscounts = sumLineDiscounts.add(lineDiscount);
             }
 
             inv.setTotalAmount(total);
 
-            // determine discount: if client provides promotionCodes, apply each and sum discounts
-            BigDecimal totalDiscount = BigDecimal.ZERO;
-            BigDecimal memberDiscount = BigDecimal.ZERO;
-            BigDecimal productDiscount = BigDecimal.ZERO;
-            BigDecimal otherDiscount = BigDecimal.ZERO;
-            InvoiceEntity saved = null;
-
-            if (req.getPromotionCodes() != null && !req.getPromotionCodes().isEmpty()) {
-                // compute discounts per promotion and persist promotion_order rows after saving invoice
-                for (String promoCode : req.getPromotionCodes()) {
-                    if (promoCode == null || promoCode.isBlank()) continue;
-                    var promo = promotionRepository.findByPromotionCode(promoCode).orElse(null);
-                    if (promo == null) continue;
-
-                    BigDecimal promoDiscount = BigDecimal.ZERO;
-                    if (promo.getPromotionTypeEntity() != null && promo.getValue() != null) {
-                        String pt = promo.getPromotionTypeEntity().getPromotionTypeCode();
-                        if ("PT_PERCENT".equalsIgnoreCase(pt)) {
-                            promoDiscount = total.multiply(promo.getValue());
-                        } else if ("PT_FIXED".equalsIgnoreCase(pt)) {
-                            promoDiscount = promo.getValue();
-                        }
-                    }
-                    totalDiscount = totalDiscount.add(promoDiscount);
-
-                    // classify promo into member/product/other
-                    String customerPromoCode = null;
-                    if (customer != null && customer.getCustomerTypeEntity() != null) {
-                        customerPromoCode = customer.getCustomerTypeEntity().getPromotionCode();
-                    }
-                    if (customerPromoCode != null && customerPromoCode.equalsIgnoreCase(promo.getPromotionCode())) {
-                        memberDiscount = memberDiscount.add(promoDiscount);
-                    } else if (productRepository.countByPromotionCode(promo.getPromotionCode()) > 0) {
-                        productDiscount = productDiscount.add(promoDiscount);
-                    } else {
-                        otherDiscount = otherDiscount.add(promoDiscount);
-                    }
+            // Calculate customer type promotion (promotion_customer_value)
+            // Keep the raw promotion value (percentage as <1, fixed as >=1) so we can apply it per-detail
+            BigDecimal promotionCustomerRaw = BigDecimal.ZERO;
+            
+            // Priority 1: Use client-provided promotion customer value (raw)
+            if (req.getPromotionCustomerValue() != null) {
+                promotionCustomerRaw = req.getPromotionCustomerValue();
+            }
+            // Priority 2: Use client-provided promotion code (raw value from promotion)
+            else if (req.getPromotionCustomerCode() != null && !req.getPromotionCustomerCode().isBlank()) {
+                var customerPromo = promotionRepository.findByPromotionCode(req.getPromotionCustomerCode()).orElse(null);
+                if (customerPromo != null && customerPromo.getPromotionTypeEntity() != null && customerPromo.getValue() != null) {
+                    promotionCustomerRaw = customerPromo.getValue();
                 }
-
-                // ensure discount doesn't exceed total
-                if (totalDiscount.compareTo(total) > 0) totalDiscount = total;
-
-                inv.setDiscount(totalDiscount);
-                inv.setFinalAmount(total.subtract(totalDiscount));
-                inv.setOrderDetailList(details);
-
-                saved = invoiceRepository.save(inv);
-
-                // persist each promotion_order separately (save with computed promoDiscount)
-                for (String promoCode : req.getPromotionCodes()) {
-                    if (promoCode == null || promoCode.isBlank()) continue;
-                    var promo = promotionRepository.findByPromotionCode(promoCode).orElse(null);
-                    if (promo == null) continue;
-                    BigDecimal promoDiscount = BigDecimal.ZERO;
-                    if (promo.getPromotionTypeEntity() != null && promo.getValue() != null) {
-                        String pt = promo.getPromotionTypeEntity().getPromotionTypeCode();
-                        if ("PT_PERCENT".equalsIgnoreCase(pt)) {
-                            promoDiscount = total.multiply(promo.getValue());
-                        } else if ("PT_FIXED".equalsIgnoreCase(pt)) {
-                            promoDiscount = promo.getValue();
-                        }
-                    }
-                    // cap per-promotion discount so cumulative doesn't exceed total
-                    if (promoDiscount.compareTo(BigDecimal.ZERO) > 0) {
-                        PromotionOrderEntity po = new PromotionOrderEntity();
-                        po.setPromotionOrderCode("PO_" + System.currentTimeMillis() + "_" + promo.getPromotionCode());
-                        po.setOrderEntity(saved);
-                        po.setPromotionEntity(promo);
-                        po.setDiscountAmount(promoDiscount);
-                        promotionOrderRepository.save(po);
-                    }
+            }
+            // Priority 3: Auto-calculate raw value from customer type (fallback)
+            else if (customer != null && customer.getCustomerTypeEntity() != null && customer.getCustomerTypeEntity().getPromotionCode() != null) {
+                var customerPromo = promotionRepository.findByPromotionCode(customer.getCustomerTypeEntity().getPromotionCode()).orElse(null);
+                if (customerPromo != null && customerPromo.getPromotionTypeEntity() != null && customerPromo.getValue() != null) {
+                    promotionCustomerRaw = customerPromo.getValue();
                 }
-
-                // Note: promotions are now managed through promotion_order junction table
-                // No need to set single promotion reference on invoice entity
-                // attach discount breakdown to response via saved entity's final mapping below
-            } else {
-                // no promotionCodes provided, fallback to client discount field
-                BigDecimal discount = req.getDiscount() == null ? BigDecimal.ZERO : req.getDiscount();
-                if (discount.compareTo(total) > 0) discount = total;
-                inv.setDiscount(discount);
-                inv.setFinalAmount(total.subtract(discount));
-                inv.setOrderDetailList(details);
-
-                saved = invoiceRepository.save(inv);
             }
 
-            // after invoice is saved, clear customer's cart items
-            if (saved != null) {
-                try {
-                    java.util.List<com.devsoga.BookStore_V2.enties.CartEntity> carts = cartRepository.findByCustomerEntity_CustomerCode(customer.getCustomerCode());
-                    if (carts != null && !carts.isEmpty()) {
-                        cartRepository.deleteAll(carts);
+            // Calculate coupon discount raw value (percentage as <1, fixed as >=1)
+            BigDecimal couponRaw = BigDecimal.ZERO;
+            
+            // Priority 1: Use client-provided coupon discount value (raw)
+            if (req.getCouponDiscountValue() != null) {
+                couponRaw = req.getCouponDiscountValue();
+            }
+            // Priority 2: Auto-calculate raw value from coupon code
+            else if (req.getCouponCode() != null && !req.getCouponCode().isBlank()) {
+                com.devsoga.BookStore_V2.enties.CouponEntity coupon = couponRepository.findByCouponCode(req.getCouponCode()).orElse(null);
+                if (coupon != null && coupon.getStatus() && coupon.getPromotionTypeEntity() != null && coupon.getValue() != null) {
+                    // Check if coupon is valid (within date range)
+                    java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+                    if (coupon.getStartDate().before(coupon.getEndDate()) && 
+                        coupon.getStartDate().before(now) && coupon.getEndDate().after(now)) {
+                        couponRaw = coupon.getValue();
                     }
-                } catch (Exception ignore) {
-                    // do not fail order creation if cart cleanup fails
                 }
+            }
+
+            // Set discount metadata on invoice (store raw values so other places know percent vs fixed)
+            inv.setPromotionCustomerValue(promotionCustomerRaw);
+            inv.setCouponDiscountValue(couponRaw);
+            
+            // Manual discount from request (raw, could be percent <1 or fixed >=1)
+            BigDecimal manualDiscount = req.getDiscount() == null ? BigDecimal.ZERO : req.getDiscount();
+            inv.setDiscount(manualDiscount);
+
+            // Calculate base totalAmount as sum of all detail finalPrices (after line-level discounts)
+            BigDecimal totalAmountFromDetails = BigDecimal.ZERO;
+            for (InvoiceDetailEntity detail : details) {
+                totalAmountFromDetails = totalAmountFromDetails.add(detail.getFinalPrice() == null ? BigDecimal.ZERO : detail.getFinalPrice());
+            }
+            inv.setTotalAmount(totalAmountFromDetails);
+
+            // Apply customer promotion per-detail (promotionCustomerRaw applies to each product after its product-level discount)
+            BigDecimal amountAfterCustomerPromo = BigDecimal.ZERO;
+            if (promotionCustomerRaw.compareTo(BigDecimal.ZERO) <= 0) {
+                amountAfterCustomerPromo = totalAmountFromDetails;
+            } else {
+                for (InvoiceDetailEntity detail : details) {
+                    BigDecimal itemPrice = detail.getFinalPrice() == null ? BigDecimal.ZERO : detail.getFinalPrice();
+                    BigDecimal adjusted = itemPrice;
+                    if (promotionCustomerRaw.compareTo(BigDecimal.ONE) < 0) {
+                        // percentage per item
+                        BigDecimal discount = itemPrice.multiply(promotionCustomerRaw);
+                        adjusted = itemPrice.subtract(discount);
+                    } else {
+                        // fixed amount per item
+                        adjusted = itemPrice.subtract(promotionCustomerRaw);
+                    }
+                    if (adjusted.compareTo(BigDecimal.ZERO) < 0) adjusted = BigDecimal.ZERO;
+                    amountAfterCustomerPromo = amountAfterCustomerPromo.add(adjusted);
+                }
+            }
+
+            // Now apply coupon and manual discounts on the amountAfterCustomerPromo
+            BigDecimal finalAmount = amountAfterCustomerPromo;
+
+            // Apply coupon discount (couponRaw is raw percent or fixed)
+            if (couponRaw.compareTo(BigDecimal.ZERO) > 0) {
+                if (couponRaw.compareTo(BigDecimal.ONE) < 0) {
+                    BigDecimal couponDiscount = finalAmount.multiply(couponRaw);
+                    finalAmount = finalAmount.subtract(couponDiscount);
+                } else {
+                    finalAmount = finalAmount.subtract(couponRaw);
+                }
+            }
+
+            // Apply manual discount
+            if (manualDiscount.compareTo(BigDecimal.ZERO) > 0) {
+                if (manualDiscount.compareTo(BigDecimal.ONE) < 0) {
+                    BigDecimal manualDiscountAmount = finalAmount.multiply(manualDiscount);
+                    finalAmount = finalAmount.subtract(manualDiscountAmount);
+                } else {
+                    finalAmount = finalAmount.subtract(manualDiscount);
+                }
+            }
+            
+            // Ensure final amount is not negative
+            if (finalAmount.compareTo(BigDecimal.ZERO) < 0) {
+                finalAmount = BigDecimal.ZERO;
+            }
+            
+            inv.setFinalAmount(finalAmount);
+            inv.setOrderDetailList(details);
+
+            InvoiceEntity saved = invoiceRepository.save(inv);
+
+            // after invoice is saved, clear customer's cart items
+            try {
+                java.util.List<com.devsoga.BookStore_V2.enties.CartEntity> carts = cartRepository.findByCustomerEntity_CustomerCode(customer.getCustomerCode());
+                if (carts != null && !carts.isEmpty()) {
+                    cartRepository.deleteAll(carts);
+                }
+            } catch (Exception ignore) {
+                // do not fail order creation if cart cleanup fails
             }
 
             // After saving the invoice and clearing cart, reduce inventory by updating quantity_sold (FIFO)
@@ -270,9 +346,8 @@ public class OrderService {
             OrderRespone out = toResp(saved);
             try {
                 // member/product/other variables exist only when promotionCodes processed
-                out.setMemberDiscount(memberDiscount);
-                out.setProductDiscount(productDiscount);
-                out.setOtherDiscount(otherDiscount);
+                out.setPromotionCustomerValue(saved.getPromotionCustomerValue());
+                out.setCouponDiscountValue(saved.getCouponDiscountValue());
             } catch (Exception ignore) {
                 // ignore if variables are not in scope
             }
@@ -286,6 +361,465 @@ public class OrderService {
             } catch (Exception ignore) {}
             resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             resp.setMessage("Failed to create order: " + e.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone getAll() {
+        BaseRespone resp = new BaseRespone();
+        try {
+            List<InvoiceEntity> invoices = invoiceRepository.findAll();
+            List<OrderRespone> out = invoices.stream().map(this::toResp).collect(Collectors.toList());
+            resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
+            resp.setMessage("OK");
+            resp.setData(out);
+        } catch (Exception e) {
+            resp.setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to get orders: " + e.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone getByCode(String orderCode) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            resp.setStatusCode(HttpStatus.OK.value());
+            resp.setMessage("Success");
+            resp.setData(toResp(opt.get()));
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to fetch order: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone update(String orderCode, OrderRequest req) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceEntity inv = opt.get();
+            if (req.getNote() != null) inv.setNote(req.getNote());
+            if (req.getAddress() != null) inv.setAddress(req.getAddress());
+            if (req.getPhoneNumber() != null) inv.setPhoneNumber(req.getPhoneNumber());
+            if (req.getDiscount() != null) inv.setDiscount(req.getDiscount());
+            if (req.getEmployeeCode() != null) {
+                var emp = employeeRepository.findByEmployeeCode(req.getEmployeeCode()).orElse(null);
+                if (emp != null) inv.setEmployeeEntity(emp);
+            }
+            if (req.getOrderType() != null) {
+                try { inv.setOrderType(InvoiceEntity.OrderType.valueOf(req.getOrderType())); } catch (Exception ignored) {}
+            }
+            if (req.getPaymentMethod() != null) {
+                try { inv.setPaymentMethod(InvoiceEntity.PaymentMethod.valueOf(req.getPaymentMethod())); } catch (Exception ignored) {}
+            }
+            if (req.getCouponCode() != null) {
+                // updating promotions is out-of-scope for simple update; ignore for now
+            }
+            InvoiceEntity saved = invoiceRepository.save(inv);
+            resp.setStatusCode(HttpStatus.OK.value());
+            resp.setMessage("Updated");
+            resp.setData(toResp(saved));
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to update order: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone getDetails(String orderCode) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var list = invoiceDetailRepository.findByOrderEntity_OrderCode(orderCode);
+            List<OrderDetailRespone> out = new java.util.ArrayList<>();
+            if (list != null) {
+                for (var d : list) {
+                    OrderDetailRespone od = new OrderDetailRespone();
+                    od.setOrderDetailCode(d.getOrderDetailCode());
+                    if (d.getProductEntity() != null) od.setProductCode(d.getProductEntity().getProductCode());
+                    od.setQuantity(d.getQuantity());
+                    od.setUnitPrice(d.getUnitPrice());
+                    od.setTotalAmount(d.getTotalAmount());
+                    out.add(od);
+                }
+            }
+            resp.setStatusCode(HttpStatus.OK.value());
+            resp.setMessage("Success");
+            resp.setData(out);
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to fetch details: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone createDetail(String orderCode, com.devsoga.BookStore_V2.dtos.requests.OrderDetailRequest req) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceEntity inv = opt.get();
+            if (req.getProductCode() == null || req.getQuantity() == null) {
+                resp.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                resp.setMessage("productCode and quantity are required");
+                resp.setData(null);
+                return resp;
+            }
+            ProductEntity prod = productRepository.findByProductCode(req.getProductCode()).orElse(null);
+            if (prod == null) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Product not found");
+                resp.setData(null);
+                return resp;
+            }
+            java.math.BigDecimal unitPrice = priceHistoryRepository.findLatestActivePriceByProductCode(prod.getProductCode()).orElse(java.math.BigDecimal.ZERO);
+            int qty = Math.max(1, req.getQuantity());
+            java.math.BigDecimal lineTotal = unitPrice.multiply(java.math.BigDecimal.valueOf(qty));
+
+            // compute per-line promotion (product-first)
+            String appliedPromoCode = null;
+            java.math.BigDecimal promotionValue = java.math.BigDecimal.ZERO;
+            java.math.BigDecimal finalUnitPrice = unitPrice;
+            
+            try {
+                String reqPromo = req.getPromotionCode();
+                com.devsoga.BookStore_V2.enties.PromotionEntity promo = null;
+                if (reqPromo != null && !reqPromo.isBlank()) promo = promotionRepository.findByPromotionCode(reqPromo).orElse(null);
+                if (promo == null && prod.getPromotionCode() != null) promo = promotionRepository.findByPromotionCode(prod.getPromotionCode()).orElse(null);
+                if (promo != null && promo.getPromotionTypeEntity() != null && promo.getValue() != null) {
+                    promotionValue = promo.getValue();
+                    appliedPromoCode = promo.getPromotionCode();
+                    
+                    // Calculate discount based on promotion value
+                    if (promotionValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                        // Percentage discount
+                        java.math.BigDecimal discountPerUnit = unitPrice.multiply(promotionValue);
+                        finalUnitPrice = unitPrice.subtract(discountPerUnit);
+                    } else {
+                        // Fixed amount discount
+                        finalUnitPrice = unitPrice.subtract(promotionValue);
+                        if (finalUnitPrice.compareTo(java.math.BigDecimal.ZERO) < 0) {
+                            finalUnitPrice = java.math.BigDecimal.ZERO;
+                        }
+                    }
+                }
+            } catch (Exception ignore) {
+                promotionValue = java.math.BigDecimal.ZERO;
+                finalUnitPrice = unitPrice;
+            }
+
+            InvoiceDetailEntity det = new InvoiceDetailEntity();
+            det.setOrderDetailCode("OD_" + System.currentTimeMillis());
+            det.setProductEntity(prod);
+            det.setQuantity(qty);
+            det.setUnitPrice(unitPrice);
+            det.setTotalAmount(lineTotal);
+            det.setPromotionCode(appliedPromoCode);
+            det.setDiscountValue(promotionValue); // Store original promotion value
+            det.setFinalPrice(finalUnitPrice.multiply(java.math.BigDecimal.valueOf(qty))); // Final price = discounted unit price * quantity
+            det.setOrderEntity(inv);
+
+            invoiceDetailRepository.save(det);
+
+            // recompute invoice totals from details to keep consistency
+            var all = invoiceDetailRepository.findByOrderEntity_OrderCode(orderCode);
+            java.math.BigDecimal sumFinalPrices = java.math.BigDecimal.ZERO;
+            if (all != null) {
+                for (var it : all) {
+                    sumFinalPrices = sumFinalPrices.add(it.getFinalPrice() == null ? java.math.BigDecimal.ZERO : it.getFinalPrice());
+                }
+            }
+            
+            // Set totalAmount to sum of detail final prices
+            inv.setTotalAmount(sumFinalPrices);
+            
+            // Apply order-level discounts with percentage/fixed logic
+            java.math.BigDecimal finalAmount = sumFinalPrices;
+            
+            // Apply customer promotion discount
+            java.math.BigDecimal customerPromoValue = inv.getPromotionCustomerValue() == null ? java.math.BigDecimal.ZERO : inv.getPromotionCustomerValue();
+            if (customerPromoValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (customerPromoValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal customerDiscount = finalAmount.multiply(customerPromoValue);
+                    finalAmount = finalAmount.subtract(customerDiscount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(customerPromoValue);
+                }
+            }
+            
+            // Apply coupon discount
+            java.math.BigDecimal couponValue = inv.getCouponDiscountValue() == null ? java.math.BigDecimal.ZERO : inv.getCouponDiscountValue();
+            if (couponValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (couponValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal couponDiscount = finalAmount.multiply(couponValue);
+                    finalAmount = finalAmount.subtract(couponDiscount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(couponValue);
+                }
+            }
+            
+            // Apply manual discount
+            java.math.BigDecimal manualDiscountValue = inv.getDiscount() == null ? java.math.BigDecimal.ZERO : inv.getDiscount();
+            if (manualDiscountValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (manualDiscountValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal manualDiscountAmount = finalAmount.multiply(manualDiscountValue);
+                    finalAmount = finalAmount.subtract(manualDiscountAmount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(manualDiscountValue);
+                }
+            }
+            
+            if (finalAmount.compareTo(java.math.BigDecimal.ZERO) < 0) finalAmount = java.math.BigDecimal.ZERO;
+            inv.setFinalAmount(finalAmount);
+            invoiceRepository.save(inv);
+
+            resp.setStatusCode(HttpStatus.CREATED.value());
+            resp.setMessage("Detail added");
+            resp.setData(null);
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to create detail: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone updateDetail(String orderCode, String detailCode, com.devsoga.BookStore_V2.dtos.requests.OrderDetailRequest req) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceDetailRepository.findByOrderDetailCode(detailCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order detail not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceDetailEntity det = opt.get();
+            if (det.getOrderEntity() == null || det.getOrderEntity().getOrderCode() == null || !det.getOrderEntity().getOrderCode().equals(orderCode)) {
+                resp.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                resp.setMessage("Detail does not belong to order");
+                resp.setData(null);
+                return resp;
+            }
+            // oldTotal calculation removed as not used
+
+            if (req.getQuantity() != null) det.setQuantity(Math.max(1, req.getQuantity()));
+            if (req.getProductCode() != null) {
+                ProductEntity p = productRepository.findByProductCode(req.getProductCode()).orElse(null);
+                if (p != null) det.setProductEntity(p);
+            }
+            // recalc unit price and total using price history of product
+            if (det.getProductEntity() != null) {
+                java.math.BigDecimal unitPrice = priceHistoryRepository.findLatestActivePriceByProductCode(det.getProductEntity().getProductCode()).orElse(java.math.BigDecimal.ZERO);
+                det.setUnitPrice(unitPrice);
+                det.setTotalAmount(unitPrice.multiply(java.math.BigDecimal.valueOf(det.getQuantity() == null ? 1 : det.getQuantity())));
+            }
+            // recalc promotion/discount for updated detail (product-first or request-provided)
+            try {
+                String reqPromo = req.getPromotionCode();
+                com.devsoga.BookStore_V2.enties.PromotionEntity promo = null;
+                if (reqPromo != null && !reqPromo.isBlank()) promo = promotionRepository.findByPromotionCode(reqPromo).orElse(null);
+                if (promo == null && det.getProductEntity() != null && det.getProductEntity().getPromotionCode() != null) promo = promotionRepository.findByPromotionCode(det.getProductEntity().getPromotionCode()).orElse(null);
+                
+                java.math.BigDecimal promotionValue = java.math.BigDecimal.ZERO;
+                java.math.BigDecimal finalUnitPrice = det.getUnitPrice();
+                String applied = null;
+                
+                if (promo != null && promo.getPromotionTypeEntity() != null && promo.getValue() != null) {
+                    promotionValue = promo.getValue();
+                    applied = promo.getPromotionCode();
+                    
+                    // Calculate discount based on promotion value
+                    if (promotionValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                        // Percentage discount
+                        java.math.BigDecimal discountPerUnit = det.getUnitPrice().multiply(promotionValue);
+                        finalUnitPrice = det.getUnitPrice().subtract(discountPerUnit);
+                    } else {
+                        // Fixed amount discount
+                        finalUnitPrice = det.getUnitPrice().subtract(promotionValue);
+                        if (finalUnitPrice.compareTo(java.math.BigDecimal.ZERO) < 0) {
+                            finalUnitPrice = java.math.BigDecimal.ZERO;
+                        }
+                    }
+                }
+                
+                det.setPromotionCode(applied);
+                det.setDiscountValue(promotionValue); // Store original promotion value
+                det.setFinalPrice(finalUnitPrice.multiply(java.math.BigDecimal.valueOf(det.getQuantity() == null ? 1 : det.getQuantity()))); // Final price = discounted unit price * quantity
+            } catch (Exception ignore) {
+                det.setDiscountValue(java.math.BigDecimal.ZERO);
+                det.setFinalPrice(det.getTotalAmount());
+            }
+            invoiceDetailRepository.save(det);
+
+            // recompute invoice totals from details
+            InvoiceEntity inv = det.getOrderEntity();
+            var all = invoiceDetailRepository.findByOrderEntity_OrderCode(orderCode);
+            java.math.BigDecimal sumFinalPrices = java.math.BigDecimal.ZERO;
+            if (all != null) {
+                for (var it : all) {
+                    sumFinalPrices = sumFinalPrices.add(it.getFinalPrice() == null ? java.math.BigDecimal.ZERO : it.getFinalPrice());
+                }
+            }
+            inv.setTotalAmount(sumFinalPrices);
+            
+            // Apply order-level discounts (customer promotion + coupon + manual discount)
+            java.math.BigDecimal customerPromoValue = inv.getPromotionCustomerValue() == null ? java.math.BigDecimal.ZERO : inv.getPromotionCustomerValue();
+            java.math.BigDecimal couponValue = inv.getCouponDiscountValue() == null ? java.math.BigDecimal.ZERO : inv.getCouponDiscountValue();
+            java.math.BigDecimal manualDiscountValue = inv.getDiscount() == null ? java.math.BigDecimal.ZERO : inv.getDiscount();
+            
+            java.math.BigDecimal finalAmount = sumFinalPrices;
+            
+            // Apply customer promotion discount
+            if (customerPromoValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (customerPromoValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal discountAmount = finalAmount.multiply(customerPromoValue);
+                    finalAmount = finalAmount.subtract(discountAmount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(customerPromoValue);
+                }
+            }
+            
+            // Apply coupon discount
+            if (couponValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (couponValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal discountAmount = finalAmount.multiply(couponValue);
+                    finalAmount = finalAmount.subtract(discountAmount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(couponValue);
+                }
+            }
+            
+            // Apply manual discount
+            if (manualDiscountValue.compareTo(java.math.BigDecimal.ZERO) > 0) {
+                if (manualDiscountValue.compareTo(java.math.BigDecimal.ONE) < 0) {
+                    // Percentage discount
+                    java.math.BigDecimal discountAmount = finalAmount.multiply(manualDiscountValue);
+                    finalAmount = finalAmount.subtract(discountAmount);
+                } else {
+                    // Fixed amount discount
+                    finalAmount = finalAmount.subtract(manualDiscountValue);
+                }
+            }
+            
+            if (finalAmount.compareTo(java.math.BigDecimal.ZERO) < 0) finalAmount = java.math.BigDecimal.ZERO;
+            inv.setFinalAmount(finalAmount);
+            invoiceRepository.save(inv);
+
+            resp.setStatusCode(HttpStatus.OK.value());
+            resp.setMessage("Detail updated");
+            resp.setData(null);
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to update detail: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone deleteDetail(String orderCode, String detailCode) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceDetailRepository.findByOrderDetailCode(detailCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order detail not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceDetailEntity det = opt.get();
+            if (det.getOrderEntity() == null || det.getOrderEntity().getOrderCode() == null || !det.getOrderEntity().getOrderCode().equals(orderCode)) {
+                resp.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                resp.setMessage("Detail does not belong to order");
+                resp.setData(null);
+                return resp;
+            }
+            invoiceDetailRepository.delete(det);
+            InvoiceEntity inv = det.getOrderEntity();
+            // recompute totals from remaining details
+            var all = invoiceDetailRepository.findByOrderEntity_OrderCode(orderCode);
+            java.math.BigDecimal sumTotals = java.math.BigDecimal.ZERO;
+            java.math.BigDecimal sumDiscounts = java.math.BigDecimal.ZERO;
+            if (all != null) {
+                for (var it : all) {
+                    sumTotals = sumTotals.add(it.getTotalAmount() == null ? java.math.BigDecimal.ZERO : it.getTotalAmount());
+                    sumDiscounts = sumDiscounts.add(it.getDiscountValue() == null ? java.math.BigDecimal.ZERO : it.getDiscountValue());
+                }
+            }
+            inv.setTotalAmount(sumTotals);
+            java.math.BigDecimal orderLevelDiscount3 = inv.getDiscount() == null ? java.math.BigDecimal.ZERO : inv.getDiscount();
+            inv.setFinalAmount(sumTotals.subtract(sumDiscounts).subtract(orderLevelDiscount3));
+            invoiceRepository.save(inv);
+
+            resp.setStatusCode(HttpStatus.OK.value());
+            resp.setMessage("Detail deleted");
+            resp.setData(null);
+        } catch (Exception ex) {
+            resp.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to delete detail: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    public BaseRespone softDelete(String orderCode) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(org.springframework.http.HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceEntity inv = opt.get();
+            if (inv.getStatus() != null && inv.getStatus().equals(Boolean.FALSE)) {
+                // already deleted - return success (idempotent)
+                resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
+                resp.setMessage("Order already deleted");
+                resp.setData(toResp(inv));
+                return resp;
+            }
+            inv.setStatus(Boolean.FALSE);
+            InvoiceEntity saved = invoiceRepository.save(inv);
+            resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
+            resp.setMessage("Order deleted");
+            resp.setData(toResp(saved));
+        } catch (Exception e) {
+            resp.setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to delete order: " + e.getMessage());
             resp.setData(null);
         }
         return resp;
@@ -305,7 +839,7 @@ public class OrderService {
         if (inv.getPromotionOrderList() != null && !inv.getPromotionOrderList().isEmpty()) {
             var firstPromoOrder = inv.getPromotionOrderList().get(0);
             if (firstPromoOrder.getPromotionEntity() != null) {
-                r.setPromotionCode(firstPromoOrder.getPromotionEntity().getPromotionCode());
+                // promotion tracking now handled through separate promotion tables
             }
         }
         // populate discount breakdown from promotion_order rows if available
@@ -341,9 +875,9 @@ public class OrderService {
             // ignore and leave zeros/fallback
             otherDisc = inv.getDiscount() == null ? BigDecimal.ZERO : inv.getDiscount();
         }
-        r.setMemberDiscount(memberDisc);
-        r.setProductDiscount(productDisc);
-        r.setOtherDiscount(otherDisc);
+        // old discount breakdown fields removed, using new schema fields
+        r.setPromotionCustomerValue(inv.getPromotionCustomerValue());
+        r.setCouponDiscountValue(inv.getCouponDiscountValue());
     r.setNote(inv.getNote());
     r.setAddress(inv.getAddress());
     r.setPhoneNumber(inv.getPhoneNumber());
@@ -358,6 +892,9 @@ public class OrderService {
                 od.setQuantity(d.getQuantity());
                 od.setUnitPrice(d.getUnitPrice());
                 od.setTotalAmount(d.getTotalAmount());
+                od.setPromotionCode(d.getPromotionCode());
+                od.setDiscountValue(d.getDiscountValue());
+                od.setFinalPrice(d.getFinalPrice());
                 outDetails.add(od);
             }
         }

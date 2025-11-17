@@ -41,7 +41,7 @@ INSERT INTO customer_type (customer_type_code, customer_type_name, promotion_cod
 -- CUSTOMER
 -- =========================
 INSERT INTO customer (customer_code, customer_name, points, address, customer_type_code, account_code) VALUES
-    ('KH_USER', 'Äáº·ng KhÃ´i NguyÃªn', 100, '123 ÄÆ°á»ng ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
+    ('KH_USER', 'Đặng Khôi Nguyên', 100, '123 Đường ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
 
 -- =========================
 -- SUPPLIER
@@ -76,6 +76,16 @@ INSERT INTO promotion (promotion_code, promotion_name, description, value, promo
     ('FA200', 'Happy New Year', 'Giáº£m 200.000Ä‘', 200000, 'PT_02', 1),
     ('FA20', 'Noel', 'Giáº£m 20% cho Ä‘Æ¡n hÃ ng trong dá»‹p Noel', 0.20, 'PT_01', 1);
 
+INSERT INTO coupon 
+(
+coupon_code, coupon_name, description, promotion_type_code, `value`, start_date, end_date
+)
+VALUES
+('SALE50', 'Giảm 50%', 'Coupon giảm giá 50% đơn hàng', 'PT_01', 0.50,
+ '2025-01-01 00:00:00', '2027-12-31 23:59:59'),
+
+('G50K', 'Giảm 50k', 'Coupon giảm giá 50.000đ', 'PT_02', 50000,
+ '2025-01-01 00:00:00', '2027-06-30 23:59:59');
 
 -- =========================
 -- PRODUCT CATEGORY (20 CATEGORIES)
@@ -1715,7 +1725,7 @@ VALUES
 -- INITIAL IMPORT INVOICE
 -- =========================
 INSERT INTO import_invoice (import_invoice_code, discount, total_amount, description, employee_code, supplier_code, status)
-VALUES ('PN01', 0, 2500000, 'Phiáº¿u nháº­p láº§n Ä‘áº§u toÃ n bá»™ sÃ¡ch', 'NV_KETOAN', 'NCC01', 'APPROVED');
+VALUES ('PN01', 0, 2500000, 'Phiếu nhập lần đầu tiên', 'NV_KETOAN', 'NCC01', 'APPROVED');
 
 
 -- =========================

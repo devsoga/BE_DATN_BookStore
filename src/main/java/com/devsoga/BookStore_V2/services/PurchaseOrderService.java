@@ -33,6 +33,9 @@ public class PurchaseOrderService {
     
     @Autowired
     private com.devsoga.BookStore_V2.repositories.ProductRepository productRepository;
+
+    @Autowired
+    private com.devsoga.BookStore_V2.repositories.PromotionRepository promotionRepository;
     
     @Autowired
     private com.devsoga.BookStore_V2.repositories.InventoryRepository inventoryRepository;
@@ -567,6 +570,16 @@ public class PurchaseOrderService {
                 if (d.getProductEntity() != null) {
                     dr.setProductCode(d.getProductEntity().getProductCode());
                     dr.setProductName(d.getProductEntity().getProductName());
+                    // set discountValue from product's active promotion if available
+                    try {
+                        String promoCode = d.getProductEntity().getPromotionCode();
+                        if (promoCode != null && !promoCode.isBlank()) {
+                            var promo = promotionRepository.findByPromotionCode(promoCode).orElse(null);
+                            if (promo != null && isPromotionValid(promo)) {
+                                dr.setDiscountValue(promo.getValue());
+                            }
+                        }
+                    } catch (Exception ignored) {}
                 }
                 // set created date if available
                 try {
@@ -620,6 +633,15 @@ public class PurchaseOrderService {
                     dr.setQuantityCancel(d.getCancelledQuantity());
                     dr.setProductCode(d.getProductEntity().getProductCode());
                     dr.setProductName(d.getProductEntity().getProductName());
+                    try {
+                        String promoCode = d.getProductEntity().getPromotionCode();
+                        if (promoCode != null && !promoCode.isBlank()) {
+                            var promo = promotionRepository.findByPromotionCode(promoCode).orElse(null);
+                            if (promo != null && isPromotionValid(promo)) {
+                                dr.setDiscountValue(promo.getValue());
+                            }
+                        }
+                    } catch (Exception ignored) {}
                     // set created date if available
                     try {
                         dr.setCreatedDate(d.getCreatedDate());
@@ -639,5 +661,19 @@ public class PurchaseOrderService {
         // include reason if present (e.g., when order is rejected)
         if (e.getReason() != null) r.setReason(e.getReason());
         return r;
+    }
+
+    private boolean isPromotionValid(com.devsoga.BookStore_V2.enties.PromotionEntity promotion) {
+        if (promotion == null || !Boolean.TRUE.equals(promotion.getStatus())) return false;
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        if (promotion.getStartDate() != null) {
+            java.time.LocalDateTime s = promotion.getStartDate().toLocalDateTime();
+            if (now.isBefore(s)) return false;
+        }
+        if (promotion.getEndDate() != null) {
+            java.time.LocalDateTime e = promotion.getEndDate().toLocalDateTime();
+            if (now.isAfter(e)) return false;
+        }
+        return true;
     }
 }
