@@ -46,6 +46,12 @@ public class AuthenticationService {
                 var customer = account.getCustomerList().get(0);
                 customerCode = customer.getCustomerCode();
                 dto.setCustomerName(customer.getCustomerName());
+                    // populate points
+                    try {
+                        if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
+                    } catch (Exception ex) {
+                        // ignore
+                    }
 
                 // Customer type info
                 if (customer.getCustomerTypeEntity() != null) {

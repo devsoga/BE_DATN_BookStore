@@ -6,6 +6,7 @@ import com.devsoga.BookStore_V2.enties.AccountEntity;
 import com.devsoga.BookStore_V2.enties.RoleEntity;
 import com.devsoga.BookStore_V2.payload.respone.BaseRespone;
 import com.devsoga.BookStore_V2.repositories.AccountRepository;
+import com.devsoga.BookStore_V2.repositories.PromotionRepository;
 import com.devsoga.BookStore_V2.repositories.RoleRepository;
 
 import java.util.List;
@@ -23,11 +24,14 @@ public class AccountService {
 	@Autowired
 	private RoleRepository roleRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private com.devsoga.BookStore_V2.repositories.CustomerRepository customerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PromotionRepository promotionRepository;
+    
+    @Autowired
+    private com.devsoga.BookStore_V2.repositories.CustomerRepository customerRepository;
 
 	@Autowired
 	private com.devsoga.BookStore_V2.repositories.EmployeeRepository employeeRepository;
@@ -76,7 +80,7 @@ public class AccountService {
 
 		return dto;
 	}
-
+  
 	// ================== LẤY 1 ACCOUNT THEO USERNAME ==================
 	public BaseRespone getAccountDetails(String username) {
 		BaseRespone response = new BaseRespone();

@@ -28,6 +28,11 @@ public class AccountController {
         return accountService.getAccountDetails(username);
     }
 
+    @GetMapping("/phone/{phoneNumber}")
+    public BaseRespone getByPhone(@PathVariable String phoneNumber) {
+        return accountService.getAccountDetailsByPhone(phoneNumber);
+    }
+
     @PostMapping("/register")
     public BaseRespone registerAccount(@RequestBody RegisterRequest request) {
         return accountService.createAccount(request);

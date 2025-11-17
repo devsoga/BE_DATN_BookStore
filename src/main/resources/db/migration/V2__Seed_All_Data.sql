@@ -76,6 +76,12 @@ INSERT INTO promotion (promotion_code, promotion_name, description, value, promo
     ('FA200', 'Happy New Year', 'Giáº£m 200.000Ä‘', 200000, 'PT_02', 1),
     ('FA20', 'Noel', 'Giáº£m 20% cho Ä‘Æ¡n hÃ ng trong dá»‹p Noel', 0.20, 'PT_01', 1);
 
+-- Set start_date and end_date for sample promotions so APIs return dates
+UPDATE promotion
+SET start_date = '2024-01-01 00:00:00',
+	end_date = '2027-12-31 23:59:59'
+WHERE promotion_code IN ('VIP5', 'VIP7', 'VIP10', 'FA200', 'FA20');
+
 INSERT INTO coupon 
 (
 coupon_code, coupon_name, description, promotion_type_code, `value`, start_date, end_date
