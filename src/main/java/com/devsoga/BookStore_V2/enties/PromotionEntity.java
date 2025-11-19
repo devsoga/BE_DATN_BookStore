@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity(name = "promotion")
 @Getter
@@ -45,6 +44,4 @@ public class PromotionEntity extends BaseAuditable {
     @JoinColumn(name = "promotion_type_code", referencedColumnName = "promotion_type_code")
     private PromotionTypeEntity promotionTypeEntity;
 
-    @OneToMany(mappedBy = "promotionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PromotionOrderEntity> promotionOrderList;
 }

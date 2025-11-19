@@ -49,17 +49,35 @@ public class AccountService {
 		// only return customer info when role is USER
 		if ("USER".equalsIgnoreCase(roleCode)) {
 			String customerCode = null;
+			com.devsoga.BookStore_V2.enties.CustomerEntity customer = null;
 			if (acct.getCustomerList() != null && !acct.getCustomerList().isEmpty()) {
-				var customer = acct.getCustomerList().get(0);
+				customer = acct.getCustomerList().get(0);
+			} else if (acct.getAccountCode() != null) {
+				var list = customerRepository.findByAccountEntity_AccountCode(acct.getAccountCode());
+				if (list != null && !list.isEmpty()) customer = list.get(0);
+			}
+			if (customer != null) {
 				customerCode = customer.getCustomerCode();
 				dto.setCustomerName(customer.getCustomerName());
-				// expose promotion_code if linked via customer type
+				try {
+					if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
+				} catch (Exception ex) {
+					// ignore
+				}
 				if (customer.getCustomerTypeEntity() != null) {
 					var ct = customer.getCustomerTypeEntity();
 					dto.setCustomerTypeCode(ct.getCustomerTypeCode());
 					dto.setCustomerTypeName(ct.getCustomerTypeName());
 					if (ct.getPromotionCode() != null && !ct.getPromotionCode().isBlank()) {
 						dto.setPromotion_code(ct.getPromotionCode());
+						try {
+							var promo = promotionRepository.findByPromotionCode(ct.getPromotionCode()).orElse(null);
+							if (promo != null && promo.getValue() != null) {
+								dto.setMemberDiscount(promo.getValue());
+							}
+						} catch (Exception ex) {
+							// ignore and leave memberDiscount null
+						}
 					}
 				}
 			}
@@ -95,6 +113,26 @@ public class AccountService {
 			response.setData(dto);
 		} else {
 			throw new RuntimeException("Account not found");
+		}
+		return response;
+	}
+
+	// ================== LẤY 1 ACCOUNT THEO PHONE ==================
+	public BaseRespone getAccountDetailsByPhone(String phoneNumber) {
+		BaseRespone response = new BaseRespone();
+		List<AccountEntity> listAccount = accountRepository.findByPhoneNumber(phoneNumber);
+
+		if (!listAccount.isEmpty()) {
+			AccountEntity acct = listAccount.get(0);
+			AccountRespone dto = mapToDto(acct);
+
+			response.setStatusCode(200);
+			response.setMessage("Account found by phone");
+			response.setData(dto);
+		} else {
+			response.setStatusCode(404);
+			response.setMessage("Account not found for phone: " + phoneNumber);
+			response.setData(null);
 		}
 		return response;
 	}

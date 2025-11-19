@@ -30,14 +30,18 @@ public class InvoiceEntity extends BaseAuditable {
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Column(name = "status")
-    private Boolean status = Boolean.TRUE;
 
     @Column(name = "promotion_customer_value")
     private BigDecimal promotionCustomerValue;
 
+    @Column(name = "promotion_customer_code")
+    private String promotionCustomerCode;
+
     @Column(name = "coupon_discount_value")
     private BigDecimal couponDiscountValue;
+
+    @Column(name = "coupon_code")
+    private String couponCode;
 
     @Column(name = "discount")
     private BigDecimal discount;
@@ -60,6 +64,9 @@ public class InvoiceEntity extends BaseAuditable {
     @Column(name = "is_paid")
     private Boolean isPaid = Boolean.FALSE;
 
+    @Column(name = "order_status")
+    private String orderStatus = "pending";
+
     
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -76,8 +83,6 @@ public class InvoiceEntity extends BaseAuditable {
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ReturnOrderEntity> returnOrderList;
 
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PromotionOrderEntity> promotionOrderList;
 
     // Enums
     public enum OrderType {
@@ -87,4 +92,5 @@ public class InvoiceEntity extends BaseAuditable {
     public enum PaymentMethod {
         Cash, QR
     }
+    
 }
