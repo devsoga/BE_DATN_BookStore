@@ -10,6 +10,8 @@ import com.devsoga.BookStore_V2.payload.respone.BaseRespone;
 import com.devsoga.BookStore_V2.repositories.PromotionRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class AccountService {
 
     @Autowired
     private com.devsoga.BookStore_V2.repositories.EmployeeRepository employeeRepository;
+
 
 
 
@@ -66,7 +69,7 @@ public class AccountService {
                         }
                     // expose promotion_code if linked via customer type
                     if (customer.getCustomerTypeEntity() != null) {
-                        var ct = customer.getCustomerTypeEntity();
+var ct = customer.getCustomerTypeEntity();
                         dto.setCustomerTypeCode(ct.getCustomerTypeCode());
                         dto.setCustomerTypeName(ct.getCustomerTypeName());
                         if (ct.getPromotionCode() != null && !ct.getPromotionCode().isBlank()) {
@@ -123,7 +126,7 @@ public class AccountService {
                         // populate points from customer
                         try {
                             if (customer.getPoints() != null) dto.setPoints(java.math.BigDecimal.valueOf(customer.getPoints()));
-                        } catch (Exception ex) {
+} catch (Exception ex) {
                             // ignore
                         }
                     if (customer.getCustomerTypeEntity() != null) {
@@ -188,7 +191,7 @@ public class AccountService {
 
         // determine role: default to USER when not provided
         String roleCode = request.getRoleCode();
-        if (roleCode == null || roleCode.isBlank()) {
+if (roleCode == null || roleCode.isBlank()) {
             roleCode = "USER";
         }
         RoleEntity role = roleRepository.findByRoleCode(roleCode).orElse(null);
