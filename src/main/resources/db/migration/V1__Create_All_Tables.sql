@@ -186,9 +186,20 @@ CREATE TABLE IF NOT EXISTS `order` (
     `order_code` VARCHAR(50) UNIQUE NOT NULL,
     `order_type` ENUM('Offline', 'Online') NOT NULL DEFAULT 'Offline',
     `payment_method` ENUM('Cash','QR') NOT NULL DEFAULT 'QR',
-    `status` BOOLEAN DEFAULT TRUE, 
+    `order_status` ENUM(
+        'pending',
+        'confirmed',
+        'processing',
+        'shipping',
+        'delivered',
+        'cancelled',
+        'returned'
+        ) NOT NULL DEFAULT 'pending',
+
     `is_paid` BOOLEAN DEFAULT FALSE, 
+    `promotion_customer_code` VARCHAR(50),
     `promotion_customer_value` DECIMAL(20,2),
+    `coupon_code` VARCHAR(50),
     `coupon_discount_value` DECIMAL(20,2),
     `discount` DECIMAL(20,2),
     `total_amount` DECIMAL(20,2),
@@ -201,6 +212,8 @@ CREATE TABLE IF NOT EXISTS `order` (
     `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`customer_code`) REFERENCES `customer`(`customer_code`),
+    FOREIGN KEY (`promotion_customer_code`) REFERENCES `promotion`(`promotion_code`),
+    FOREIGN KEY (`coupon_code`) REFERENCES `coupon`(`coupon_code`),
     FOREIGN KEY (`employee_code`) REFERENCES `employee`(`employee_code`)
 );
 
@@ -224,17 +237,7 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
 -- =========================
 -- ORDER PROMOTION (promotions applied to a specific order)
 -- =========================
-CREATE TABLE IF NOT EXISTS `promotion_order` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `promotion_order_code` VARCHAR(50) UNIQUE NOT NULL,
-    `order_code` VARCHAR(50),
-    `promotion_code` VARCHAR(50),
-    `discount_amount` DECIMAL(20,2),
-    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`order_code`) REFERENCES `order`(`order_code`) ON DELETE CASCADE,
-    FOREIGN KEY (`promotion_code`) REFERENCES `promotion`(`promotion_code`)
-);
+-- (Removed) `promotion_order` table: this project no longer stores per-order promotion rows here.
 
 -- =========================
 -- COMMENT

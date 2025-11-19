@@ -11,7 +11,8 @@ INSERT INTO role (role_code, role_name) VALUES
 -- ACCOUNT
 -- =========================
 INSERT INTO account (account_code, username, password, phone_number, email, role_code) VALUES
-    ('TK_USER01', 'devsoga', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'user@email.com', 'USER'),
+	('TK_USERDEMO', 'guest', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'user@email.com', 'USER'),
+    ('TK_USER01', 'devsoga', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'dangkhoinguyen1501@email.com', 'USER'),
     ('TK_ADMIN', 'admin', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0901234567', 'admin@bookstore.com', 'ADMIN'),
     ('TK_MPOS1', 'mpos1', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0912345678', 'mpos1@bookstore.com', 'MPOS'),
     ('TK_MPOS2', 'mpos2', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0912345679', 'mpos2@bookstore.com', 'MPOS'),
@@ -41,6 +42,7 @@ INSERT INTO customer_type (customer_type_code, customer_type_name, promotion_cod
 -- CUSTOMER
 -- =========================
 INSERT INTO customer (customer_code, customer_name, points, address, customer_type_code, account_code) VALUES
+   ('KH_DEMO', 'Guest customer', 0, '', 'CUS_REGULAR', 'TK_USERDEMO'),
     ('KH_USER', 'Đặng Khôi Nguyên', 100, '123 Đường ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
 
 -- =========================

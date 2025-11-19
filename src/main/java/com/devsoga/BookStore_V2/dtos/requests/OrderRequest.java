@@ -17,6 +17,7 @@ public class OrderRequest {
     private BigDecimal couponDiscountValue; // optional - coupon discount value
     private String orderType; // Offline or Online
     private String paymentMethod; // Cash or QR
+    private String orderStatus; // optional - status text matching DB (e.g. 'pending')
     private BigDecimal discount; // optional - manual discount
     private String note; // optional order note
     private String address; // optional shipping address
@@ -32,6 +33,7 @@ public class OrderRequest {
     public BigDecimal getCouponDiscountValue() { return couponDiscountValue; }
     public String getOrderType() { return orderType; }
     public String getPaymentMethod() { return paymentMethod; }
+    public String getOrderStatus() { return orderStatus; }
     public BigDecimal getDiscount() { return discount; }
     public String getNote() { return note; }
     public String getAddress() { return address; }
