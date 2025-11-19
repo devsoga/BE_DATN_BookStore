@@ -1,5 +1,6 @@
 package com.devsoga.BookStore_V2.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     Optional<ProductEntity> findByProductCode(String productCode);
     
     // Search by product name, description or product code (case-insensitive), newest first
-    java.util.List<ProductEntity> findByProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProductCodeContainingIgnoreCaseOrderByCreatedDateDesc(
+    List<ProductEntity> findByProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProductCodeContainingIgnoreCaseOrderByCreatedDateDesc(
             String productName, String description, String productCode
     );
 
@@ -20,11 +21,11 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     int countByPromotionCode(@org.springframework.data.repository.query.Param("code") String code);
 
     // Find products by category code
-    java.util.List<ProductEntity> findByProductCategoryEntity_CategoryCode(String categoryCode);
+    List<ProductEntity> findByProductCategoryEntity_CategoryCode(String categoryCode);
 
     // Find products by category type
-    java.util.List<ProductEntity> findByProductCategoryEntity_CategoryType(String categoryType);
+    List<ProductEntity> findByProductCategoryEntity_CategoryType(String categoryType);
 
     // Batch find by product codes
-    java.util.List<ProductEntity> findByProductCodeIn(java.util.List<String> productCodes);
+    List<ProductEntity> findByProductCodeIn(List<String> productCodes);
 }

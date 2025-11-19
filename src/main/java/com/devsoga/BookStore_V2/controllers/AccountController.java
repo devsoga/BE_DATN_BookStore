@@ -18,7 +18,11 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     
-
+    @GetMapping
+    public BaseRespone getAllAccounts() {
+        return accountService.getAllAccounts();
+    }
+    
     @GetMapping("/{username}")
     public BaseRespone helloAccount(@PathVariable String username) {
         return accountService.getAccountDetails(username);

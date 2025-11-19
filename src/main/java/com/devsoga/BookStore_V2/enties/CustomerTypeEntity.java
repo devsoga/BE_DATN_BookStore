@@ -1,11 +1,21 @@
 package com.devsoga.BookStore_V2.enties;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.List;
 
 @Entity(name = "customer_type")
 @Getter
@@ -30,5 +40,6 @@ public class CustomerTypeEntity {
     private String promotionCode;
 
     @OneToMany(mappedBy = "customerTypeEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CustomerEntity> customerList;
 }
