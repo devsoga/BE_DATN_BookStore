@@ -16,6 +16,7 @@ public class AccountRespone {
     private String customerTypeCode;
     private String customerTypeName;
     private BigDecimal memberDiscount;
+    private BigDecimal points;
     private String username;
     private String email;
     private String roleCode;

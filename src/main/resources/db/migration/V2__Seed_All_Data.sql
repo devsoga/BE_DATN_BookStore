@@ -11,7 +11,8 @@ INSERT INTO role (role_code, role_name) VALUES
 -- ACCOUNT
 -- =========================
 INSERT INTO account (account_code, username, password, phone_number, email, role_code) VALUES
-    ('TK_USER01', 'devsoga', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'user@email.com', 'USER'),
+	('TK_USERDEMO', 'guest', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'user@email.com', 'USER'),
+    ('TK_USER01', 'devsoga', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0934567890', 'dangkhoinguyen1501@email.com', 'USER'),
     ('TK_ADMIN', 'admin', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0901234567', 'admin@bookstore.com', 'ADMIN'),
     ('TK_MPOS1', 'mpos1', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0912345678', 'mpos1@bookstore.com', 'MPOS'),
     ('TK_MPOS2', 'mpos2', '$2a$10$c3h6fvOYaAcAS3BDYZWRG.7NHD8WePgNugJKU5RYCgMM.46Ho7ewq', '0912345679', 'mpos2@bookstore.com', 'MPOS'),
@@ -41,6 +42,7 @@ INSERT INTO customer_type (customer_type_code, customer_type_name, promotion_cod
 -- CUSTOMER
 -- =========================
 INSERT INTO customer (customer_code, customer_name, points, address, customer_type_code, account_code) VALUES
+   ('KH_DEMO', 'Guest customer', 0, '', 'CUS_REGULAR', 'TK_USERDEMO'),
     ('KH_USER', 'Đặng Khôi Nguyên', 100, '123 Đường ABC, TP.HCM', 'CUS_SILVER', 'TK_USER01');
 
 -- =========================
@@ -75,6 +77,12 @@ INSERT INTO promotion (promotion_code, promotion_name, description, value, promo
     ('VIP10', 'Diamond Customer', 'Giáº£m 10% cho khÃ¡ch hÃ ng Diamond', 0.10, 'PT_01', 1),
     ('FA200', 'Happy New Year', 'Giáº£m 200.000Ä‘', 200000, 'PT_02', 1),
     ('FA20', 'Noel', 'Giáº£m 20% cho Ä‘Æ¡n hÃ ng trong dá»‹p Noel', 0.20, 'PT_01', 1);
+
+-- Set start_date and end_date for sample promotions so APIs return dates
+UPDATE promotion
+SET start_date = '2024-01-01 00:00:00',
+	end_date = '2027-12-31 23:59:59'
+WHERE promotion_code IN ('VIP5', 'VIP7', 'VIP10', 'FA200', 'FA20');
 
 INSERT INTO coupon 
 (

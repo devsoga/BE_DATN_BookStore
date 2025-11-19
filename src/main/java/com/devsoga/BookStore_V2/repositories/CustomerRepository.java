@@ -13,4 +13,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Intege
     Optional<CustomerEntity> findByCustomerCode(String customerCode);
 
     List<CustomerEntity> findByCustomerNameContainingIgnoreCase(String customerName);
+    
+    // helper to find customers linked to an account code
+    List<CustomerEntity> findByAccountEntity_AccountCode(String accountCode);
 }
