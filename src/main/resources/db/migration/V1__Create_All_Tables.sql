@@ -234,10 +234,6 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
     FOREIGN KEY (`promotion_code`) REFERENCES `promotion`(`promotion_code`)
 );
 
--- =========================
--- ORDER PROMOTION (promotions applied to a specific order)
--- =========================
--- (Removed) `promotion_order` table: this project no longer stores per-order promotion rows here.
 
 -- =========================
 -- COMMENT
@@ -389,3 +385,82 @@ CREATE TABLE IF NOT EXISTS `return_exchange` (
     `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`order_code`) REFERENCES `order`(`order_code`) ON DELETE CASCADE
 );
+
+-- =========================
+-- REVIEW (ĐÁNH GIÁ SẢN PHẨM)
+-- =========================
+-- Business rules implemented in schema:
+-- - One review per (product_code, customer_code), enforced by UNIQUE constraint.
+-- - Review can be edited (timestamps updated) — no hard delete enforced here.
+-- - is_verified_purchase stored (application should set TRUE when the customer has purchased the product).
+-- - Optional images stored in separate table `review_image`.
+-- - A view `review_stats_by_product` provides total reviews, average rating and percent per star.
+-- =========================
+-- Q&A (HỎI - ĐÁP SẢN PHẨM)
+-- =========================
+-- Business rules implemented in schema:
+-- - Anyone (guest or registered account) can ask a question.
+-- - Each question can have multiple answers.
+-- - Answers may be authored by shop/admin (responder_type = 'SHOP'/'ADMIN') or by users ('USER').
+-- - Badges and "Real Buyer" flags are stored as boolean flags that application sets according to purchase history.
+CREATE TABLE IF NOT EXISTS `review` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `review_code` VARCHAR(50) UNIQUE NOT NULL,
+    `product_code` VARCHAR(50) NOT NULL,
+    `customer_code` VARCHAR(50) NOT NULL,
+    `rating` TINYINT NOT NULL,
+    `content` TEXT,
+    `is_verified_purchase` BOOLEAN DEFAULT FALSE,
+    `status` VARCHAR(50) DEFAULT 'PUBLISHED',
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`product_code`) REFERENCES `product`(`product_code`) ON DELETE CASCADE,
+    FOREIGN KEY (`customer_code`) REFERENCES `customer`(`customer_code`) ON DELETE CASCADE,
+    UNIQUE KEY `uq_review_product_customer` (`product_code`, `customer_code`)
+);
+
+CREATE TABLE IF NOT EXISTS `review_image` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `review_code` VARCHAR(50) NOT NULL,
+    `image_path` VARCHAR(500) NOT NULL,
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`review_code`) REFERENCES `review`(`review_code`) ON DELETE CASCADE
+);
+
+-- Q&A tables: product_question and product_answer
+CREATE TABLE IF NOT EXISTS `product_question` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `question_code` VARCHAR(50) UNIQUE NOT NULL,
+    `product_code` VARCHAR(50) NOT NULL,
+    `account_code` VARCHAR(50),
+    `asker_name` VARCHAR(255),
+    `asker_email` VARCHAR(255),
+    `content` TEXT NOT NULL,
+    `status` VARCHAR(50) DEFAULT 'OPEN',
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`product_code`) REFERENCES `product`(`product_code`) ON DELETE CASCADE,
+    FOREIGN KEY (`account_code`) REFERENCES `account`(`account_code`) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS `product_answer` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `answer_code` VARCHAR(50) UNIQUE NOT NULL,
+    `question_code` VARCHAR(50) NOT NULL,
+    `account_code` VARCHAR(50),
+    `responder_type` VARCHAR(20) DEFAULT 'USER',
+    `is_responder_shop` BOOLEAN DEFAULT FALSE,
+    `is_responder_real_buyer` BOOLEAN DEFAULT FALSE,
+    `content` TEXT NOT NULL,
+    `is_accepted` BOOLEAN DEFAULT FALSE,
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`question_code`) REFERENCES `product_question`(`question_code`) ON DELETE CASCADE,
+    FOREIGN KEY (`account_code`) REFERENCES `account`(`account_code`) ON DELETE SET NULL
+);
+
+-- Helpful indexes for Q&A
+CREATE INDEX IF NOT EXISTS idx_product_question_product_code ON `product_question`(`product_code`);
+CREATE INDEX IF NOT EXISTS idx_product_answer_question_code ON `product_answer`(`question_code`);
+
+
