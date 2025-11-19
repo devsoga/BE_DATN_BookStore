@@ -30,8 +30,6 @@ public class InvoiceEntity extends BaseAuditable {
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Column(name = "status")
-    private Boolean status = Boolean.TRUE;
 
     @Column(name = "promotion_customer_value")
     private BigDecimal promotionCustomerValue;
@@ -60,6 +58,9 @@ public class InvoiceEntity extends BaseAuditable {
     @Column(name = "is_paid")
     private Boolean isPaid = Boolean.FALSE;
 
+    @Column(name = "order_status")
+    private String orderStatus = "pending";
+
     
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -87,4 +88,5 @@ public class InvoiceEntity extends BaseAuditable {
     public enum PaymentMethod {
         Cash, QR
     }
+    
 }

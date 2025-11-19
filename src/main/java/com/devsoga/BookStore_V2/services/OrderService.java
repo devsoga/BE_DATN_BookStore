@@ -96,8 +96,7 @@ public class OrderService {
             InvoiceEntity inv = new InvoiceEntity();
             String orderCode = req.getOrderType() == null ? "ORD_" + System.currentTimeMillis() : "ORD_" + System.currentTimeMillis();
             inv.setOrderCode(orderCode);
-            // default order status set to true when creating
-            inv.setStatus(Boolean.TRUE);
+            // no boolean `status` column — use `orderStatus` only
             // determine order type and payment method
             InvoiceEntity.OrderType chosenType;
             try {
@@ -108,6 +107,19 @@ public class OrderService {
                 inv.setOrderType(chosenType);
             }
             try { inv.setPaymentMethod(InvoiceEntity.PaymentMethod.valueOf(req.getPaymentMethod())); } catch (Exception ex) { inv.setPaymentMethod(InvoiceEntity.PaymentMethod.QR); }
+            // set order status (store human-readable string).
+            // If client provided a status, use it. Otherwise default:
+            // - For Offline orders: 'confirmed'
+            // - For other orders: 'pending'
+            if (req.getOrderStatus() != null && !req.getOrderStatus().isBlank()) {
+                inv.setOrderStatus(req.getOrderStatus());
+            } else {
+                if (chosenType == InvoiceEntity.OrderType.Offline) {
+                    inv.setOrderStatus("confirmed");
+                } else {
+                    inv.setOrderStatus("pending");
+                }
+            }
             // set isPaid default based on order type: Offline -> true, Online -> false
             inv.setIsPaid(chosenType == InvoiceEntity.OrderType.Offline ? Boolean.TRUE : Boolean.FALSE);
             inv.setCustomerEntity(customer);
@@ -282,47 +294,38 @@ public class OrderService {
             }
             inv.setTotalAmount(totalAmountFromDetails);
 
-            // Apply customer promotion per-detail (promotionCustomerRaw applies to each product after its product-level discount)
-            BigDecimal amountAfterCustomerPromo = BigDecimal.ZERO;
-            if (promotionCustomerRaw.compareTo(BigDecimal.ZERO) <= 0) {
-                amountAfterCustomerPromo = totalAmountFromDetails;
-            } else {
-                for (InvoiceDetailEntity detail : details) {
-                    BigDecimal itemPrice = detail.getFinalPrice() == null ? BigDecimal.ZERO : detail.getFinalPrice();
-                    BigDecimal adjusted = itemPrice;
-                    if (promotionCustomerRaw.compareTo(BigDecimal.ONE) < 0) {
-                        // percentage per item
-                        BigDecimal discount = itemPrice.multiply(promotionCustomerRaw);
-                        adjusted = itemPrice.subtract(discount);
+            // Apply discount sequence based on orderType
+            BigDecimal finalAmount = totalAmountFromDetails;
+            
+            // Step 1: Apply customer promotion (promotionCustomerValue) as a percent of totalAmount
+            // finalAmount = totalAmount - promotionCustomerValue * totalAmount
+            if (promotionCustomerRaw.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal customerDiscount = totalAmountFromDetails.multiply(promotionCustomerRaw);
+                finalAmount = totalAmountFromDetails.subtract(customerDiscount);
+            }
+            
+            // Step 2: Apply different discount sequences based on orderType
+            if (chosenType == InvoiceEntity.OrderType.Offline) {
+                // For Offline: totalAmount - promotionCustomerValue - discount
+                // Apply manual discount
+                if (manualDiscount.compareTo(BigDecimal.ZERO) > 0) {
+                    if (manualDiscount.compareTo(BigDecimal.ONE) < 0) {
+                        BigDecimal manualDiscountAmount = finalAmount.multiply(manualDiscount);
+                        finalAmount = finalAmount.subtract(manualDiscountAmount);
                     } else {
-                        // fixed amount per item
-                        adjusted = itemPrice.subtract(promotionCustomerRaw);
+                        finalAmount = finalAmount.subtract(manualDiscount);
                     }
-                    if (adjusted.compareTo(BigDecimal.ZERO) < 0) adjusted = BigDecimal.ZERO;
-                    amountAfterCustomerPromo = amountAfterCustomerPromo.add(adjusted);
                 }
-            }
-
-            // Now apply coupon and manual discounts on the amountAfterCustomerPromo
-            BigDecimal finalAmount = amountAfterCustomerPromo;
-
-            // Apply coupon discount (couponRaw is raw percent or fixed)
-            if (couponRaw.compareTo(BigDecimal.ZERO) > 0) {
-                if (couponRaw.compareTo(BigDecimal.ONE) < 0) {
-                    BigDecimal couponDiscount = finalAmount.multiply(couponRaw);
-                    finalAmount = finalAmount.subtract(couponDiscount);
-                } else {
-                    finalAmount = finalAmount.subtract(couponRaw);
-                }
-            }
-
-            // Apply manual discount
-            if (manualDiscount.compareTo(BigDecimal.ZERO) > 0) {
-                if (manualDiscount.compareTo(BigDecimal.ONE) < 0) {
-                    BigDecimal manualDiscountAmount = finalAmount.multiply(manualDiscount);
-                    finalAmount = finalAmount.subtract(manualDiscountAmount);
-                } else {
-                    finalAmount = finalAmount.subtract(manualDiscount);
+            } else {
+                // For Online: totalAmount - promotionCustomerValue - couponDiscountValue
+                // Apply coupon discount
+                if (couponRaw.compareTo(BigDecimal.ZERO) > 0) {
+                    if (couponRaw.compareTo(BigDecimal.ONE) < 0) {
+                        BigDecimal couponDiscount = finalAmount.multiply(couponRaw);
+                        finalAmount = finalAmount.subtract(couponDiscount);
+                    } else {
+                        finalAmount = finalAmount.subtract(couponRaw);
+                    }
                 }
             }
             
@@ -480,6 +483,9 @@ public class OrderService {
             }
             if (req.getOrderType() != null) {
                 try { inv.setOrderType(InvoiceEntity.OrderType.valueOf(req.getOrderType())); } catch (Exception ignored) {}
+            }
+            if (req.getOrderStatus() != null && !req.getOrderStatus().isBlank()) {
+                inv.setOrderStatus(req.getOrderStatus());
             }
             if (req.getPaymentMethod() != null) {
                 try { inv.setPaymentMethod(InvoiceEntity.PaymentMethod.valueOf(req.getPaymentMethod())); } catch (Exception ignored) {}
@@ -880,14 +886,15 @@ public class OrderService {
                 return resp;
             }
             InvoiceEntity inv = opt.get();
-            if (inv.getStatus() != null && inv.getStatus().equals(Boolean.FALSE)) {
-                // already deleted - return success (idempotent)
+            if (inv.getOrderStatus() != null && inv.getOrderStatus().equalsIgnoreCase("cancelled")) {
+                // already cancelled - return success (idempotent)
                 resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
                 resp.setMessage("Order already deleted");
                 resp.setData(toResp(inv));
                 return resp;
             }
-            inv.setStatus(Boolean.FALSE);
+            // mark order status as cancelled when soft-deleting
+            inv.setOrderStatus("cancelled");
             InvoiceEntity saved = invoiceRepository.save(inv);
             resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
             resp.setMessage("Order deleted");
@@ -904,12 +911,39 @@ public class OrderService {
         if (inv == null) return null;
         OrderRespone r = new OrderRespone();
         r.setOrderCode(inv.getOrderCode());
-        r.setStatus(inv.getStatus());
         r.setDiscount(inv.getDiscount());
         r.setTotalAmount(inv.getTotalAmount());
         r.setFinalAmount(inv.getFinalAmount());
         if (inv.getCustomerEntity() != null) r.setCustomerCode(inv.getCustomerEntity().getCustomerCode());
         if (inv.getEmployeeEntity() != null) r.setEmployeeCode(inv.getEmployeeEntity().getEmployeeCode());
+        // Populate customerName and employeeName using entities or repositories (by code) when available
+        try {
+            if (inv.getCustomerEntity() != null && inv.getCustomerEntity().getCustomerName() != null) {
+                r.setCustomerName(inv.getCustomerEntity().getCustomerName());
+            } else if (r.getCustomerCode() != null) {
+                var custOpt = customerRepository.findByCustomerCode(r.getCustomerCode());
+                if (custOpt.isPresent()) r.setCustomerName(custOpt.get().getCustomerName());
+            }
+        } catch (Exception ignore) {}
+        // populate customerEmail from linked Account if available, otherwise fetch via customer repository
+        try {
+            if (inv.getCustomerEntity() != null && inv.getCustomerEntity().getAccountEntity() != null && inv.getCustomerEntity().getAccountEntity().getEmail() != null) {
+                r.setCustomerEmail(inv.getCustomerEntity().getAccountEntity().getEmail());
+            } else if (r.getCustomerCode() != null) {
+                var custOpt2 = customerRepository.findByCustomerCode(r.getCustomerCode());
+                if (custOpt2.isPresent() && custOpt2.get().getAccountEntity() != null) {
+                    r.setCustomerEmail(custOpt2.get().getAccountEntity().getEmail());
+                }
+            }
+        } catch (Exception ignore) {}
+        try {
+            if (inv.getEmployeeEntity() != null && inv.getEmployeeEntity().getEmployeeName() != null) {
+                r.setEmployeeName(inv.getEmployeeEntity().getEmployeeName());
+            } else if (r.getEmployeeCode() != null) {
+                var empOpt = employeeRepository.findByEmployeeCode(r.getEmployeeCode());
+                if (empOpt.isPresent()) r.setEmployeeName(empOpt.get().getEmployeeName());
+            }
+        } catch (Exception ignore) {}
         // Get first promotion code from promotion_order relationships if available
         if (inv.getPromotionOrderList() != null && !inv.getPromotionOrderList().isEmpty()) {
             var firstPromoOrder = inv.getPromotionOrderList().get(0);
@@ -960,6 +994,7 @@ public class OrderService {
     // Populate orderType and paymentMethod as strings for the response
     if (inv.getOrderType() != null) r.setOrderType(inv.getOrderType().name());
     if (inv.getPaymentMethod() != null) r.setPaymentMethod(inv.getPaymentMethod().name());
+    if (inv.getOrderStatus() != null) r.setOrderStatus(inv.getOrderStatus());
             // populate orderDate from created_date (BaseAuditable)
             try {
                 var cd = inv.getCreatedDate();
@@ -971,13 +1006,32 @@ public class OrderService {
             for (InvoiceDetailEntity d : inv.getOrderDetailList()) {
                 OrderDetailRespone od = new OrderDetailRespone();
                 od.setOrderDetailCode(d.getOrderDetailCode());
-                if (d.getProductEntity() != null) od.setProductCode(d.getProductEntity().getProductCode());
+                if (d.getProductEntity() != null) {
+                    od.setProductCode(d.getProductEntity().getProductCode());
+                    try {
+                        if (d.getProductEntity().getProductName() != null) od.setProductName(d.getProductEntity().getProductName());
+                        if (d.getProductEntity().getImage() != null) od.setImage(d.getProductEntity().getImage());
+                    } catch (Exception ignore) {}
+                } else {
+                    if (d.getProductEntity() != null) od.setProductCode(d.getProductEntity().getProductCode());
+                }
                 od.setQuantity(d.getQuantity());
                 od.setUnitPrice(d.getUnitPrice());
                 od.setTotalAmount(d.getTotalAmount());
                 od.setPromotionCode(d.getPromotionCode());
                 od.setDiscountValue(d.getDiscountValue());
                 od.setFinalPrice(d.getFinalPrice());
+                // fallback: if productName or image not set above, try to fetch by productCode
+                try {
+                    if ((od.getProductName() == null || od.getProductName().isBlank()) && od.getProductCode() != null) {
+                        var pOpt = productRepository.findByProductCode(od.getProductCode());
+                        if (pOpt.isPresent()) {
+                            var p = pOpt.get();
+                            if (p.getProductName() != null) od.setProductName(p.getProductName());
+                            if (p.getImage() != null) od.setImage(p.getImage());
+                        }
+                    }
+                } catch (Exception ignore) {}
                 outDetails.add(od);
             }
         }
