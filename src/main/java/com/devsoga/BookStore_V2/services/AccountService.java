@@ -137,7 +137,7 @@ public class AccountService {
 		return response;
 	}
 
-	// ================== LẤY DANH SÁCH TẤT CẢ ACCOUNT ==================
+
 	public BaseRespone getAllAccounts() {
 		BaseRespone response = new BaseRespone();
 
