@@ -90,7 +90,7 @@ public class InvoiceEntity extends BaseAuditable {
     }
 
     public enum PaymentMethod {
-        Cash, QR
+        Cash, QR, VNPAY
     }
     
 }

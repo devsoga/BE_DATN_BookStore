@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `order` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `order_code` VARCHAR(50) UNIQUE NOT NULL,
     `order_type` ENUM('Offline', 'Online') NOT NULL DEFAULT 'Offline',
-    `payment_method` ENUM('Cash','QR') NOT NULL DEFAULT 'QR',
+    `payment_method` ENUM('Cash','QR', 'VNPAY') NOT NULL DEFAULT 'QR',
     `order_status` ENUM(
         'pending',
         'confirmed',
@@ -232,6 +232,20 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
     FOREIGN KEY (`product_code`) REFERENCES `product`(`product_code`),
     FOREIGN KEY (`order_code`) REFERENCES `order`(`order_code`) ON DELETE CASCADE,
     FOREIGN KEY (`promotion_code`) REFERENCES `promotion`(`promotion_code`)
+);
+
+-- =========================
+-- PAYMENT HISTORY
+-- =========================
+-- Records payment attempts / confirmations for orders
+CREATE TABLE IF NOT EXISTS `transfer_history` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `order_code` VARCHAR(50) NOT NULL,
+    `payment_method` ENUM('QR','VNPAY','Momo') NOT NULL,
+    `transferAmount` DECIMAL(20,2) NOT NULL,
+    `description` TEXT,
+    `created_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 

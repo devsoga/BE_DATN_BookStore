@@ -31,7 +31,8 @@ public class SecurityConfig {
         "/v1/api/auth/**",
         "/v1/api/account/register",
         "/v1/api/categories/**",
-        "/uploads/**"
+        "/uploads/**",
+        "/v1/api/vnpay/**",
     };
 
     @Autowired

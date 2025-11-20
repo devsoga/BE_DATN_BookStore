@@ -541,6 +541,77 @@ public class OrderService {
         return resp;
     }
 
+    public BaseRespone updateIsPaid(String orderCode, Boolean isPaid) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            if (orderCode == null || orderCode.isBlank()) {
+                resp.setStatusCode(org.springframework.http.HttpStatus.BAD_REQUEST.value());
+                resp.setMessage("orderCode is required");
+                resp.setData(null);
+                return resp;
+            }
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(org.springframework.http.HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceEntity inv = opt.get();
+            if (isPaid == null) isPaid = Boolean.TRUE; // default to true when not provided
+            inv.setIsPaid(isPaid);
+            // If marking paid, you may want to update order status accordingly (optional)
+            if (isPaid && (inv.getOrderStatus() == null || inv.getOrderStatus().equalsIgnoreCase("pending"))) {
+                inv.setOrderStatus("confirmed");
+            }
+            InvoiceEntity saved = invoiceRepository.save(inv);
+            resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
+            resp.setMessage("Order payment status updated");
+            resp.setData(toResp(saved));
+        } catch (Exception ex) {
+            resp.setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to update payment status: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
+    /**
+     * Update only the isPaid flag on the order without modifying orderStatus.
+     * Used for payment gateway callbacks (e.g., VNPay) where we only want to mark
+     * the order as paid and not change the status.
+     */
+    public BaseRespone updateIsPaidOnly(String orderCode, Boolean isPaid) {
+        BaseRespone resp = new BaseRespone();
+        try {
+            if (orderCode == null || orderCode.isBlank()) {
+                resp.setStatusCode(org.springframework.http.HttpStatus.BAD_REQUEST.value());
+                resp.setMessage("orderCode is required");
+                resp.setData(null);
+                return resp;
+            }
+            var opt = invoiceRepository.findByOrderCode(orderCode);
+            if (opt.isEmpty()) {
+                resp.setStatusCode(org.springframework.http.HttpStatus.NOT_FOUND.value());
+                resp.setMessage("Order not found");
+                resp.setData(null);
+                return resp;
+            }
+            InvoiceEntity inv = opt.get();
+            if (isPaid == null) isPaid = Boolean.TRUE; // default to true when not provided
+            inv.setIsPaid(isPaid);
+            InvoiceEntity saved = invoiceRepository.save(inv);
+            resp.setStatusCode(org.springframework.http.HttpStatus.OK.value());
+            resp.setMessage("Order isPaid updated");
+            resp.setData(toResp(saved));
+        } catch (Exception ex) {
+            resp.setStatusCode(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value());
+            resp.setMessage("Failed to update payment status: " + ex.getMessage());
+            resp.setData(null);
+        }
+        return resp;
+    }
+
     public BaseRespone getDetails(String orderCode) {
         BaseRespone resp = new BaseRespone();
         try {
@@ -961,9 +1032,10 @@ public class OrderService {
                 if (empOpt.isPresent()) r.setEmployeeName(empOpt.get().getEmployeeName());
             }
         } catch (Exception ignore) {}
-        // `promotion_order` table removed — no per-order promotion breakdown computed here
-        // old discount breakdown fields removed, using new schema fields
+        // `promotion_order` table removed — use promotion/coupon fields stored on the order
+        r.setPromotionCustomerCode(inv.getPromotionCustomerCode());
         r.setPromotionCustomerValue(inv.getPromotionCustomerValue());
+        r.setCouponCode(inv.getCouponCode());
         r.setCouponDiscountValue(inv.getCouponDiscountValue());
     r.setNote(inv.getNote());
     r.setAddress(inv.getAddress());

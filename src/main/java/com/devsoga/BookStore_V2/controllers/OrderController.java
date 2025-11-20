@@ -1,8 +1,10 @@
 package com.devsoga.BookStore_V2.controllers;
 
 import com.devsoga.BookStore_V2.dtos.requests.OrderRequest;
+import com.devsoga.BookStore_V2.dtos.requests.SepayTransferRequest;
 import com.devsoga.BookStore_V2.payload.respone.BaseRespone;
 import com.devsoga.BookStore_V2.services.OrderService;
+import com.devsoga.BookStore_V2.services.TransferHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private TransferHistoryService transferHistoryService;
 
     @PostMapping("")
     public BaseRespone createOrder(@RequestBody OrderRequest request) {
@@ -47,6 +52,21 @@ public class OrderController {
     @PostMapping("/{orderCode}")
     public BaseRespone deleteOrder(@PathVariable String orderCode) {
         return orderService.softDelete(orderCode);
+    }
+
+    @PostMapping("/{orderCode}/paid")
+    public BaseRespone updatePaid(@PathVariable String orderCode, @org.springframework.web.bind.annotation.RequestParam(name = "paid", required = false) Boolean paid) {
+        return orderService.updateIsPaid(orderCode, paid);
+    }
+
+    @PostMapping("/sepay")
+    public BaseRespone handleSepayTransfer(@RequestBody SepayTransferRequest request) {
+        return transferHistoryService.processSepayTransfer(request);
+    }
+
+    @GetMapping("/{orderCode}/transfers")
+    public BaseRespone getTransfersByOrder(@PathVariable String orderCode) {
+        return transferHistoryService.getByOrderCode(orderCode);
     }
 
     // Order detail endpoints
